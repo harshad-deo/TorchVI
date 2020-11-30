@@ -1,0 +1,19 @@
+load("@bazel_latex//:latex.bzl", "latex_document")
+load("@bazel_latex//packages:packages.bzl", "latex_package")
+load("//dep:latex.bzl", "latex_dep")
+
+latex_package(
+    name = "setspace",
+    srcs = latex_dep("setspace"),
+)
+
+latex_document(
+    name = "introduction",
+    srcs = [
+        ":setspace",
+        "@bazel_latex//packages:datetime2",
+        "@bazel_latex//packages:geometry",
+        "@bazel_latex//packages:hyperref",
+    ],
+    main = "introduction.tex",
+)
