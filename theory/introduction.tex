@@ -6,6 +6,9 @@
 \usepackage{amsmath}
 \usepackage{eufrak}
 \usepackage{amssymb}
+\usepackage{mathtools}
+
+\newcommand{\defeq}{\vcentcolon=}
 
 \title{Introduction to Automatic Differentiation Variational Inference}
 \author{Harshad Deo \\ 
@@ -78,5 +81,37 @@ latent space $\theta$, and its support given by:
 ADVI is applicable if $\theta$ is continuous and the gradient of the log joint density, $\nabla_{\theta}\log p(x, \theta)$, 
 is defined within the support of the prior.
 
+\subsection*{Objective Function}
+
+Considering a family of approximating variational densities $q(\theta ; \phi)$, parameterized by $\phi \in \Phi$, 
+variational inference finds the member of the family that minimizes the KL divergence to the posterior:
+
+\begin{equation*}
+  \phi^* = \underset{\phi \in \Phi}{\text{argmin}}\, KL(q(\theta ; \phi) || p(\theta | x)) \quad \text{such that} \quad supp(q(\theta ; \phi)) \subseteq supp(p(\theta | x))
+\end{equation*}
+
+The optimised $q(\theta; \phi^*)$ serves as an approximation to the posterior. 
+
+\begin{align*}
+  KL(q(\theta ; \phi) || p(\theta | x)) \defeq &\mathbb{E}_{q(\theta)}\big[\log q(\theta;\phi) - \log p(\theta|x)  \big] \\
+  =& \mathbb{E}_{q(\theta)}\big[\log q(\theta;\phi) - \log p(\theta, x) + \log p(x)\big] \\
+  =& \mathbb{E}_{q(\theta)}\big[\log q(\theta;\phi) - \log p(\theta, x) \big] + \log p(x)
+\end{align*}
+
+Since the KL divergence is itself dependent on the posterior density, it cannot be directly minimized. Instead, we try 
+to maximise the Evidence Lower Bound (ELBO), given by:
+
+\begin{equation*}
+  \mathcal{L}(\phi) = \mathbb{E}_{q(\theta)}\big[\log p(\theta, x) - \log q(\theta;\phi) \big]
+\end{equation*}
+
+The negative of the ELBO is equal to the KL divergence, upto an additive constant. Therefore maximising the ELBO is 
+equivalent to minimising the KL divergence. Therefore the target objective function is given by:
+
+\begin{equation*}
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}}\, \mathcal{L}(\phi) \quad \text{such that} \quad supp(q(\theta ; \phi)) \subseteq supp(p(\theta | x))
+\end{equation*}
+
+\subsection*{Unconstrained Objective Function}
 
 \end{document}

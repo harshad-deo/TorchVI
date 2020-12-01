@@ -7,10 +7,17 @@ latex_package(
     srcs = latex_dep("setspace"),
 )
 
+latex_package(
+    name = "mathtools",
+    srcs = latex_dep("mathtools"),
+)
+
 latex_document(
     name = "introduction",
     srcs = [
+        ":mathtools",
         ":setspace",
+        "@bazel_latex//packages:calc",
         "@bazel_latex//packages:datetime2",
         "@bazel_latex//packages:geometry",
         "@bazel_latex//packages:hyperref",
