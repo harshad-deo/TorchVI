@@ -2,3 +2,5 @@ bazel-TorchVI
 bazel-bin
 bazel-out
 bazel-testlogs
+.vscode
+.metals
