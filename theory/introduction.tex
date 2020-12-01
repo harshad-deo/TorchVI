@@ -3,14 +3,16 @@
 \usepackage{hyperref}
 \usepackage{setspace}
 \usepackage[style=iso]{datetime2}
+\usepackage{amsmath}
+\usepackage{eufrak}
+\usepackage{amssymb}
 
-
-\title{Introduction to Auto Differentiation Variational Inference}
+\title{Introduction to Automatic Differentiation Variational Inference}
 \author{Harshad Deo \\ 
   \href{mailto:harshad@moreficent.com}{harshad@moreficent.com} \\ 
   \href{mailto:harshad@simianquant.com}{harshad@simianquant.com}
 }
-\date{\DTMDate{2020-12-1}}
+\date{}
 
 \setlength{\parindent}{0cm}
 
@@ -28,6 +30,53 @@
 \begin{document}
   
 \maketitle
+
+Bayesian methods allow us to capture uncertainty while drawing inferences and making predictions from data. Instead of 
+point estimates, they provide the machinery to generate a probability distribution over the inference targets. Aside from 
+guarding against over-zealous interpretations of the analysis, quantifying the uncertainty is useful when the utility of 
+the inference target is a non-linear function of its value. For example, if two assets, say a stock or a house, have the
+same expected return but the second has a much higher variance (i.e.\ is more risky), most people would invest in the 
+first. 
+
+Formally, given observations $x$ and latent variables $\theta$, Bayesian methods attempt to construct the posterior 
+distribution of the latent variables given the data, i.e.\ $p(\theta|x)$. For most practical problems, it is intractable 
+to calculate the true posterior, therefore in practice, Bayesian methods are a suite of algorithms that attempt to 
+approximate the true posterior. There are two families of approaches that are used:
+
+\begin{enumerate}
+  \item Those that construct a stationary stochastic process whose outputs are samples from the joint posterior, like 
+    Markov Chain Monte Carlo and Hamiltonian Monte Carlo. These do not scale to large datasets and are tricky at 
+    best to parallelize.
+  \item Those that choose the best approximation to the true posterior from a known family of distributions. This method 
+    of inferring the true posterior is called variational inference (VI).
+\end{enumerate}
+
+This monograph presents Automatic Differentiation Variational Inference (ADVI), a new VI algorithm
+developed by Kucukelbir at al \footnote{Kucukelbir, Alp, et al. ``Automatic differentiation variational inference." 
+The Journal of Machine Learning Research 18.1 (2017): 430-474.} that overcomes the shortcomings of earlier VI approaches,
+with a focus on using ADVI to fit complex models to large datasets. 
+
+\section*{Theoretical Development}
+
+Variational approaches haven't been frequently used in practice because each problem required the construction of a new
+variational scheme and optimization procecure. ADVI aims to automate this process. 
+
+\begin{enumerate}
+  \item ADVI transforms any applicable probability model into one over unconstrained real latent variables. Since all the 
+  latent variables are defined in the same space, ADVI can use a single variational family for all models. 
+  \item ADVI expresses the gradient of the objective function as an expectation over a standard gaussian. This allows
+  the gradient to be efficiently computed using Monte Carlo sampling. 
+\end{enumerate}
+
+ADVI is applicable to all differentiable probability models. Given a probability parameterized by a $K$ dimensional 
+latent space $\theta$, and its support given by:
+
+\begin{equation}
+  supp(p(\theta)) = \{\theta | \theta \in \mathbb{R}^K \, \text{and} \, p(\theta) > 0 \} \subseteq \mathbb{R} ^ K \notag
+\end{equation}
+
+ADVI is applicable if $\theta$ is continuous and the gradient of the log joint density, $\nabla_{\theta}\log p(x, \theta)$, 
+is defined within the support of the prior.
 
 
 \end{document}

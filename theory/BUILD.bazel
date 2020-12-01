@@ -14,6 +14,9 @@ latex_document(
         "@bazel_latex//packages:datetime2",
         "@bazel_latex//packages:geometry",
         "@bazel_latex//packages:hyperref",
+        "@bazel_latex//packages:amsmath",
+        "@bazel_latex//packages:amssymb",
+        "@bazel_latex//packages:eufrak",
     ],
     main = "introduction.tex",
 )
