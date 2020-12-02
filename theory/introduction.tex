@@ -141,4 +141,25 @@ With this transformation, the unconstrained objective function can be expressed 
   \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)| - \log q(\zeta, \phi) \big]
 \end{equation*}
 
+\subsection*{Variational Approximation}
+
+ADVI uses a multivariate normal distribution to approximate the distribution of the transformed latent variables ($\zeta$). This
+implicitly induces a non-Gaussian distribution in the original latent space ($\theta$). The approximation can be implemented in
+two main ways:
+
+\begin{enumerate}
+  \item \textbf{Mean-field Gaussian}, in which all the transformed latent variables are assumed to be independent
+  \item \textbf{Full-rank Gaussian}, in which all the transformed variables are allowed to be correlated
+\end{enumerate}
+
+The number of parameters of a Full-rank Gaussian approximation ($\phi$) grow quadratically with the dimensionality of the 
+latent space ($K$), making this approach unfeasable for large models. Since the focus of this monograph (and the repository),
+is on techniques to fit large models to large datasets, only the mean field approximation is considered. Therefore the
+variational approximation is given by:
+
+\begin{align*}
+  q(\zeta, \phi) \defeq& \prod_{k = 1}^{K}\mathcal{N}\big(\zeta_k; \mu_k, (\exp \omega_k)^2\big) \\
+  \Phi =& \mathbb{R}^{2K}
+\end{align*}
+
 \end{document}
