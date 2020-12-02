@@ -102,7 +102,7 @@ Since the KL divergence is itself dependent on the posterior density, it cannot 
 to maximise the Evidence Lower Bound (ELBO), given by:
 
 \begin{equation*}
-  \mathcal{L}(\phi) = \mathbb{E}_{q(\theta)}\big[\log p(\theta, x) - \log q(\theta;\phi) \big]
+  \mathcal{L}(\phi) = \mathbb{E}_{q(\theta)}\big[\log p(x, \theta) - \log q(\theta;\phi) \big]
 \end{equation*}
 
 The negative of the ELBO is equal to the KL divergence, upto an additive constant. Therefore maximising the ELBO is 
@@ -113,5 +113,32 @@ equivalent to minimising the KL divergence. Therefore the target objective funct
 \end{equation*}
 
 \subsection*{Unconstrained Objective Function}
+
+The first step is to remove the domain constraint of the objective function. Define a bijective differentiable function $T$:
+
+\begin{align*}
+  &T : supp(p(\theta)) \to \mathbb{R}^K \\
+  &\zeta = T(\theta)
+\end{align*}
+
+The transformed joint density now has the representation:
+
+\begin{equation*}
+  p(x, \zeta) = p\big(x, T^{-1}(\zeta)\big)|\det J_{T^{-1}}(\zeta)| 
+\end{equation*}
+
+To illustrate, consider the three most common constraint transforms as they are implemented in Stan:\footnote{Stan Development Team. 2020. Stan Modeling Language Users Guide and Reference Manual, 2.25. https://mc-stan.org}
+
+\begin{itemize}
+  \item $\theta > a \implies \zeta(\theta) = \log(\theta - a)$
+  \item $\theta < b \implies \zeta(\theta) = \log(b - \theta)$
+  \item $a < \theta < b \implies \zeta(\theta) = \log\big(\frac{\theta - a}{b - \theta}\big)$
+\end{itemize}
+
+With this transformation, the unconstrained objective function can be expressed as:
+
+\begin{equation*}
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)| - \log q(\zeta, \phi) \big]
+\end{equation*}
 
 \end{document}
