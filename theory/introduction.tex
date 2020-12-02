@@ -59,7 +59,7 @@ developed by Kucukelbir at al \footnote{Kucukelbir, Alp, et al. ``Automatic diff
 The Journal of Machine Learning Research 18.1 (2017): 430-474.} that overcomes the shortcomings of earlier VI approaches,
 with a focus on using ADVI to fit complex models to large datasets. 
 
-\section*{Theoretical Development}
+\section*{Applicability}
 
 Variational approaches haven't been frequently used in practice because each problem required the construction of a new
 variational scheme and optimization procecure. ADVI aims to automate this process. 
@@ -81,7 +81,7 @@ latent space $\theta$, and its support given by:
 ADVI is applicable if $\theta$ is continuous and the gradient of the log joint density, $\nabla_{\theta}\log p(x, \theta)$, 
 is defined within the support of the prior.
 
-\subsection*{Objective Function}
+\section*{Objective Function}
 
 Considering a family of approximating variational densities $q(\theta ; \phi)$, parameterized by $\phi \in \Phi$, 
 variational inference finds the member of the family that minimizes the KL divergence to the posterior:
@@ -112,7 +112,7 @@ equivalent to minimising the KL divergence. Therefore the target objective funct
   \phi^* = \underset{\phi \in \Phi}{\text{argmax}}\, \mathcal{L}(\phi) \quad \text{such that} \quad supp(q(\theta ; \phi)) \subseteq supp(p(\theta | x))
 \end{equation*}
 
-\subsection*{Unconstrained Objective Function}
+\section*{Unconstrained Objective Function}
 
 The first step is to remove the domain constraint of the objective function. Define a bijective differentiable function $T$:
 
@@ -138,10 +138,10 @@ To illustrate, consider the three most common constraint transforms as they are 
 With this transformation, the unconstrained objective function can be expressed as:
 
 \begin{equation*}
-  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)| - \log q(\zeta, \phi) \big]
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)| - \log q(\zeta; \phi) \big]
 \end{equation*}
 
-\subsection*{Variational Approximation}
+\section*{Variational Approximation}
 
 ADVI uses a multivariate normal distribution to approximate the distribution of the transformed latent variables ($\zeta$). This
 implicitly induces a non-Gaussian distribution in the original latent space ($\theta$). The approximation can be implemented in
@@ -159,7 +159,50 @@ variational approximation is given by:
 
 \begin{align*}
   q(\zeta, \phi) \defeq& \prod_{k = 1}^{K}\mathcal{N}\big(\zeta_k; \mu_k, (\exp \omega_k)^2\big) \\
-  \Phi =& \mathbb{R}^{2K}
+  \Phi =& \{\mu_1, \ldots, \mu_K, \omega_1, \ldots, \omega_K \} = \mathbb{R}^{2K}
 \end{align*}
+
+With this approximation, the optimization objective can be expressed as:
+
+\begin{equation*}
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] - \mathbb{E}_{q(\zeta; \phi)}\big[\log q(\zeta; \phi) \big]
+\end{equation*}
+
+The second term is the entropy of a multivariate Gaussian. This can be simplified to:
+
+\begin{align*}
+  \mathbb{E}_q[\log q] &= \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \frac{1}{2}\ln\det\big(\text{diag}((\exp \omega)^2\big) \\
+  &= \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \frac{1}{2}\ln\prod_{k=1}^K\big(\exp \omega_{k}\big)^2 \\
+  &= \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \sum_{k=1}^{K}\omega_k
+\end{align*}
+
+Therefore the optimization objective can be simplified to:
+
+\begin{equation*}
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] - \sum_{k=1}^{K}\omega_k
+\end{equation*}
+
+
+The final step is to convert the expectation over $q(\zeta; \phi)$ into one over a standard normal variable. To achieve
+this, consider a transformation $S_{\phi}$ that aborbs the variational parameters $\phi$\footnote{This is variously 
+referred to as elliptical standardization, coordinate transformation, invertable transformation and the re-parameterization
+trick}. In the mean field case, this is given by:
+
+\begin{align*}
+  \eta &= S_{\phi}(\zeta) = \text{diag}\big(\exp(\omega)\big)^{-1}(\zeta - \mu) \\
+  q(\eta) &= \prod_{k=1}^{K}\mathcal{N}(\eta_k; 0, 1)
+\end{align*}
+
+
+With this transformation, the objective function is given by:
+
+\begin{equation*}
+  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] - \sum_{k=1}^{K}\omega_k
+\end{equation*}
+
+Since the expectation in the objective is no longer dependent on the optimization target ($\phi$), the gradient of the expectation
+equals the expectation of the gradient, and can therefore be efficiently calculated using Monte Carlo integration. In the paper, 
+the authors argue that, in practice, a single sample is sufficient. The objective function can now be solved by standard procedures
+like gradient ascent. 
 
 \end{document}
