@@ -179,7 +179,7 @@ The second term is the entropy of a multivariate Gaussian. This can be simplifie
 Therefore the optimization objective can be simplified to:
 
 \begin{equation*}
-  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] - \sum_{k=1}^{K}\omega_k
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] + \sum_{k=1}^{K}\omega_k
 \end{equation*}
 
 
@@ -197,7 +197,7 @@ trick}. In the mean field case, this is given by:
 With this transformation, the objective function is given by:
 
 \begin{equation*}
-  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] - \sum_{k=1}^{K}\omega_k
+  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] + \sum_{k=1}^{K}\omega_k
 \end{equation*}
 
 Since the expectation in the objective is no longer dependent on the optimization target ($\phi$), the gradient of the expectation
