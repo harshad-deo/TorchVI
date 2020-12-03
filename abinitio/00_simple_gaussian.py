@@ -7,13 +7,11 @@ from tqdm import tqdm
 torch.manual_seed(42)
 np.random.seed(42)
 
-MU_KNOWN = -4
-SIGMA_KNOWN = 3
-
 class Model:
-  def __init__(self):
+  def __init__(self, sigma_known):
     self.mu = torch.randn(1)
     self.omega = torch.randn(1)
+    self.sigma_known = sigma_known
 
     self.mu.requires_grad = True
     self.omega.requires_grad = True
@@ -21,7 +19,7 @@ class Model:
   def __call__(self, x):
     eta = torch.randn((1,))
     loc = self.mu + eta * self.omega.exp()
-    dist = distributions.Normal(loc=loc, scale=SIGMA_KNOWN)
+    dist = distributions.Normal(loc=loc, scale=self.sigma_known)
     lp = dist.log_prob(x).sum()
     return lp + self.omega
 
@@ -32,8 +30,8 @@ class Model:
     return f'mu: {self.mu}, omega: {self.omega}'
 
 
-def fit(xs, num_epochs):
-    model = Model()
+def fit(sigma_known, xs, num_epochs):
+    model = Model(sigma_known)
     optimizer = optim.Adam(model.parameters(), lr=1e-1)
 
     losses = np.zeros(num_epochs)
@@ -57,10 +55,14 @@ def fit(xs, num_epochs):
 
 if __name__ == "__main__":
     num_samples = 100
-    xs = torch.normal(MU_KNOWN, SIGMA_KNOWN, size=(num_samples,))
+    
+    mu_known = -4
+    sigma_known = 3
+
+    xs = torch.normal(mu_known, sigma_known, size=(num_samples,))
     
     num_epochs = 200
-    losses, mus, sds = fit(xs, num_epochs)
+    losses, mus, sds = fit(sigma_known, xs, num_epochs)
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
 
