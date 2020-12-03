@@ -1,5 +1,26 @@
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+load("@rules_python//python:defs.bzl", "py_runtime_pair")
 
 buildifier(
     name = "buildifier",
+)
+
+py_runtime(
+    name = "python3_runtime",
+    files = ["@python38_static//:files"],
+    interpreter = "@python38_static//:python_bin",
+    python_version = "PY3",
+    visibility = ["//visibility:public"],
+)
+
+py_runtime_pair(
+    name = "custom_py_runtime_pair",
+    py2_runtime = None,
+    py3_runtime = ":python3_runtime",
+)
+
+toolchain(
+    name = "custom_py_toolchain",
+    toolchain = ":custom_py_runtime_pair",
+    toolchain_type = "@bazel_tools//tools/python:toolchain_type",
 )

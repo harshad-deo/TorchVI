@@ -1,6 +1,17 @@
 workspace(name = "torchvi")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("//rules:http_archive_ext.bzl", "http_archive_ext")
+
+http_archive(
+    name = "rules_python",
+    sha256 = "e46612e9bb0dae8745de6a0643be69e8665a03f63163ac6610c210e80d14c3e4",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.0.3/rules_python-0.0.3.tar.gz",
+)
+
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
 
 http_archive(
     name = "io_bazel_rules_go",
@@ -57,3 +68,67 @@ http_archive(
 load("@bazel_latex//:repositories.bzl", "latex_repositories")
 
 latex_repositories()
+
+http_archive_ext(
+    name = "python38_static",
+    build_file_content = """
+exports_files(["python_bin"])
+filegroup(
+    name = "files",
+    srcs = glob(["build/**"], exclude = ["**/* *"]),
+    visibility = ["//visibility:public"],
+)
+
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+pkg_tar(
+    name = "python38",
+    extension = "tar.gz",
+    srcs = glob(["build/**"], exclude=['WORKSPACE', 'BUILD.bazel']),
+    strip_prefix = "build",
+    visibility = ["//visibility:public"]
+)
+""",
+    patch_cmds = [
+        "mkdir $(pwd)/build",
+        "./configure --prefix=$(pwd)/build --enable-optimizations --disable-shared --enable-option-checking=fatal --with-lto --without-ensurepip",
+        "make -j6",
+        "make install",
+        "ln -s build/bin/python3 python_bin",
+    ],
+    sha256 = "e3003ed57db17e617acb382b0cade29a248c6026b1bd8aad1f976e9af66a83b0",
+    strip_prefix = "Python-3.8.5",
+    urls = [
+        "https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz",
+    ],
+    workspace_file_content = """
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "rules_pkg",
+    urls = [
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.6-1/rules_pkg-0.2.6.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.2.6/rules_pkg-0.2.6.tar.gz",
+    ],
+    sha256 = "aeca78988341a2ee1ba097641056d168320ecc51372ef7ff8e64b139516a4937",
+)
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
+""",
+)
+
+load("@rules_python//python:pip.bzl", "pip_repositories")
+
+pip_repositories()
+
+load("@rules_python//python:pip.bzl", "pip_import")
+
+pip_import(
+    name = "py_deps",
+    python_interpreter_target = "@python38_static//:python_bin",
+    requirements = "//:requirements.txt",
+)
+
+load("@py_deps//:requirements.bzl", "pip_install")
+
+pip_install()
+
+register_toolchains("//:custom_py_toolchain")
