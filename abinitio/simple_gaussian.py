@@ -18,7 +18,7 @@ class Model:
     self.mu.requires_grad = True
     self.omega.requires_grad = True
 
-  def elbo(self, x):
+  def __call__(self, x):
     eta = torch.randn((1,))
     loc = self.mu + eta * self.omega.exp()
     dist = distributions.Normal(loc=loc, scale=SIGMA_KNOWN)
@@ -42,7 +42,7 @@ def fit(xs, num_epochs):
 
     for _ in tqdm(range(num_epochs)):
       optimizer.zero_grad()
-      loss = -model.elbo(xs)
+      loss = -model(xs)
       losses.append(loss.item())
       mus.append(model.mu.item())
       omegas.append(model.omega.item())
