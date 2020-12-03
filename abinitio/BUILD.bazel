@@ -1,21 +1,4 @@
 load("@py_deps//:requirements.bzl", "requirement")
+load(":abinitio.bzl", "simple_example")
 
-matplotlib_deps = [
-    requirement("matplotlib"),
-    requirement("pyparsing"),
-    requirement("cycler"),
-    requirement("python-dateutil"),
-    requirement("kiwisolver"),
-    requirement("Pillow"),
-]
-
-
-py_binary(
-    name = "simple_gaussian",
-    srcs = ["simple_gaussian.py"],
-    deps = [
-        requirement("torch"),
-        requirement("numpy"),
-        requirement("tqdm"),
-    ] + matplotlib_deps,
-)
+simple_example("00_simple_gaussian")
