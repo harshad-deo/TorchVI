@@ -7,27 +7,28 @@ from tqdm import tqdm
 torch.manual_seed(42)
 np.random.seed(42)
 
+
 class Model:
-  def __init__(self, sigma_known):
-    self.mu = torch.randn(1)
-    self.omega = torch.randn(1)
-    self.sigma_known = sigma_known
+    def __init__(self, sigma_known):
+        self.mu = torch.randn(1)
+        self.omega = torch.randn(1)
+        self.sigma_known = sigma_known
 
-    self.mu.requires_grad = True
-    self.omega.requires_grad = True
+        self.mu.requires_grad = True
+        self.omega.requires_grad = True
 
-  def __call__(self, x):
-    eta = torch.randn((1,))
-    loc = self.mu + eta * self.omega.exp()
-    dist = distributions.Normal(loc=loc, scale=self.sigma_known)
-    lp = dist.log_prob(x).sum()
-    return lp + self.omega
+    def __call__(self, x):
+        eta = torch.randn((1, ))
+        loc = self.mu + eta * self.omega.exp()
+        dist = distributions.Normal(loc=loc, scale=self.sigma_known)
+        lp = dist.log_prob(x).sum()
+        return lp + self.omega
 
-  def parameters(self):
-    return [self.mu, self.omega]
+    def parameters(self):
+        return [self.mu, self.omega]
 
-  def __repr__(self):
-    return f'mu: {self.mu}, omega: {self.omega}'
+    def __repr__(self):
+        return f'mu: {self.mu}, omega: {self.omega}'
 
 
 def fit(sigma_known, xs, num_epochs):
@@ -39,13 +40,13 @@ def fit(sigma_known, xs, num_epochs):
     omegas = np.zeros(num_epochs)
 
     for i in tqdm(range(num_epochs)):
-      optimizer.zero_grad()
-      loss = -model(xs)
-      losses[i] = loss.item()
-      mus[i] = model.mu.item()
-      omegas[i] = model.omega.item()
-      loss.backward()
-      optimizer.step()
+        optimizer.zero_grad()
+        loss = -model(xs)
+        losses[i] = loss.item()
+        mus[i] = model.mu.item()
+        omegas[i] = model.omega.item()
+        loss.backward()
+        optimizer.step()
 
     losses = np.log(losses)
     sds = np.exp(omegas)
@@ -55,12 +56,12 @@ def fit(sigma_known, xs, num_epochs):
 
 if __name__ == "__main__":
     num_samples = 100
-    
+
     mu_known = -4
     sigma_known = 3
 
-    xs = torch.normal(mu_known, sigma_known, size=(num_samples,))
-    
+    xs = torch.normal(mu_known, sigma_known, size=(num_samples, ))
+
     num_epochs = 200
     losses, mus, sds = fit(sigma_known, xs, num_epochs)
 

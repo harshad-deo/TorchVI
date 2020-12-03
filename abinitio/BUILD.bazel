@@ -1,6 +1,12 @@
 load("@py_deps//:requirements.bzl", "requirement")
+load("//format:format.bzl", "format_py")
 load(":abinitio.bzl", "simple_example")
 
 simple_example("00_simple_gaussian")
 
 simple_example("01_simple_bernoulli")
+
+format_py(
+    name = "fmt",
+    srcs = glob(["*.py"]),
+)

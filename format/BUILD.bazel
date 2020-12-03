@@ -1,0 +1,16 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary")
+
+py_binary(
+    name = "format_py",
+    srcs = ["format_py.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("yapf"),
+    ],
+)
+
+exports_files(
+    ["setup.cfg"],
+    visibility = ["//visibility:public"],
+)

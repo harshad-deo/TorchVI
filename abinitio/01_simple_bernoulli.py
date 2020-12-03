@@ -7,6 +7,7 @@ from tqdm import tqdm
 torch.manual_seed(42)
 np.random.seed(42)
 
+
 class Model:
     def __init__(self):
         self.mu = torch.randn(1)
@@ -16,7 +17,7 @@ class Model:
         self.omega.requires_grad = True
 
     def __call__(self, x):
-        eta = torch.randn((1,))
+        eta = torch.randn((1, ))
         zeta = self.mu + eta * self.omega.exp()
         p = 1 / (1 + (-zeta).exp())
 
@@ -31,7 +32,7 @@ class Model:
         return [self.mu, self.omega]
 
     def __repr__(self):
-      return f'mu: {self.mu}, omega: {self.omega}'
+        return f'mu: {self.mu}, omega: {self.omega}'
 
 
 def fit(xs, num_epochs):
@@ -43,26 +44,27 @@ def fit(xs, num_epochs):
     omegas = np.zeros(num_epochs)
 
     for i in tqdm(range(num_epochs)):
-      optimizer.zero_grad()
-      loss = -model(xs)
-      losses[i] = loss.item()
-      mus[i] = model.mu.item()
-      omegas[i] = model.omega.item()
-      loss.backward()
-      optimizer.step()
+        optimizer.zero_grad()
+        loss = -model(xs)
+        losses[i] = loss.item()
+        mus[i] = model.mu.item()
+        omegas[i] = model.omega.item()
+        loss.backward()
+        optimizer.step()
 
     losses = np.log(losses)
     sds = np.exp(omegas)
 
     return losses, mus, sds
 
+
 if __name__ == "__main__":
     num_samples = 100
     p_known = 0.65
 
-    xs = torch.bernoulli(torch.ones((num_samples,)), p = p_known)
+    xs = torch.bernoulli(torch.ones((num_samples, )), p=p_known)
     num_epochs = 1000
-    
+
     losses, mus, sds = fit(xs, num_epochs)
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
@@ -76,7 +78,7 @@ if __name__ == "__main__":
     sample_success = torch.sum(xs)
     alpha = 1 + sample_success
     beta = 1 + num_samples - sample_success
-    expected = np.random.beta(a=alpha, b=beta, size=num_samples*10)
+    expected = np.random.beta(a=alpha, b=beta, size=num_samples * 10)
 
     _ = ax2.hist(actual, label='actual', alpha=0.5)
     _ = ax2.hist(expected, label='expected', alpha=0.5)
