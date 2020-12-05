@@ -20,7 +20,7 @@ class Model:
         dist = distributions.Bernoulli(logits=zeta)
         lp = dist.log_prob(x).sum()
 
-        jac = p.abs().log() + (1 - p).abs().log()
+        jac = p.log() + (1 - p).log()
 
         return lp + jac + self.omega
 
