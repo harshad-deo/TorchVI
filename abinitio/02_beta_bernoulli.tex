@@ -1,0 +1,81 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{eufrak}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+\newcommand{\defeq}{\vcentcolon=}
+
+\title{Ab'Initio ADVI \\ Beta Bernoulli}
+\author{Harshad Deo \\ 
+  \href{mailto:harshad@moreficent.com}{harshad@moreficent.com} \\ 
+  \href{mailto:harshad@simianquant.com}{harshad@simianquant.com}
+}
+\date{}
+
+\setlength{\parindent}{0cm}
+
+\hypersetup{
+  colorlinks,
+  citecolor=blue,
+  filecolor=blue,
+  linkcolor=blue,
+  urlcolor=blue
+}
+  
+\setlength{\parskip}{\baselineskip}%
+  
+  
+\begin{document}
+  
+\maketitle
+
+Consider a Bernoulli random variable with an unknown success probability $\theta$ with a beta prior on $\theta$. Formally:
+
+\begin{align*}
+  X &\sim Bernoulli(\theta), \quad 0 < \theta <1\\
+  \theta &\sim \beta(\alpha_0, \beta_0)
+\end{align*}
+
+The constraint of the domain of $\theta$ can be relaxed using a logit transform:
+
+\begin{align*}
+  \zeta &= T(\theta) = \log \frac{\theta}{1 - \theta} \\
+  \theta &= T^{-1}(\zeta) = \frac{1}{1 + \exp(-\zeta)}
+\end{align*}
+
+The log determinant of the jacobian of the inverse transform is given by:
+
+\begin{equation*}
+  \log|\det J_{T^{-1}}(\zeta)| = \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta))
+\end{equation*}
+
+
+Approximating $\zeta$ with a Gaussian distribution with mean $\mu$ and scale $\exp(\omega)$, the approximated 
+variational space is given by:
+
+\begin{equation*}
+  \Phi = \{\mu, \omega\} = \mathbb{R}^2
+\end{equation*}
+
+Given the variational approximation, the elliptical standardization is given by:
+
+\begin{align*}
+  \eta &= S_{\phi}(\zeta) = \frac{\zeta - \mu}{\exp(\omega)} \\
+  \zeta &= S_{\phi}^{-1}(\eta) = \mu + \eta \exp(\omega)
+\end{align*}
+
+Therefore the objective function is given by:
+
+\begin{align*}
+  \mu^*, \omega^* &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x, \zeta) + \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta)) \big] + \omega, \quad \zeta = \mu + \eta\exp(\omega) \\
+  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \zeta) + \log p(\zeta) + \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta))] + \omega
+\end{align*}
+
+Unlike the objective function of the simple Bernoulli example, the log prior probability of $\zeta$ is not zero. This 
+makes explicit the regularizing effect of the prior. 
+
+\end{document}
