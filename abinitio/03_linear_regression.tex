@@ -1,0 +1,87 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{eufrak}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+\newcommand{\defeq}{\vcentcolon=}
+
+\title{Ab'Initio ADVI \\ Linear Regression}
+\author{Harshad Deo \\ 
+  \href{mailto:harshad@moreficent.com}{harshad@moreficent.com} \\ 
+  \href{mailto:harshad@simianquant.com}{harshad@simianquant.com}
+}
+\date{}
+
+\setlength{\parindent}{0cm}
+
+\hypersetup{
+  colorlinks,
+  citecolor=blue,
+  filecolor=blue,
+  linkcolor=blue,
+  urlcolor=blue
+}
+  
+\setlength{\parskip}{\baselineskip}%
+  
+  
+\begin{document}
+  
+\maketitle
+
+Consider a univariate linear model with a gaussian error term, with Gaussian priors on the regression coefficients and 
+a half normal prior on the error scale. Formally,
+
+\begin{align*}
+  Y &\sim \mathcal{N}(\theta_0 + \theta_1 X, \theta_2) \\
+  \theta_0, \theta_1 &\sim \mathcal{N}(0, 1) \\
+  \theta_2 &\sim \text{HalfNormal}(1)
+\end{align*}
+
+$\theta_0$ and $\theta_1$ are unconstrained, while $\theta_2$ must be positive. Therefore the domain transforms 
+can be given by:
+
+\begin{align*}
+  \zeta_0 &= T_0(\theta_0) = \theta_0 \\
+  \zeta_1 &= T_0(\theta_1) = \theta_1 \\
+  \zeta_2 &= T_2(\theta_2) = \log \theta_2 \\
+  \theta_0 &= T^{-1}_0(\zeta_0) = \zeta_0 \\
+  \theta_1 &= T^{-1}_1(\zeta_1) = \zeta_1 \\
+  \theta_2 &= T^{-1}_2(\zeta_2) = \exp \zeta_2
+\end{align*}
+
+The log determinant of the jacobian of the inverse transform is given by:
+
+\begin{equation*}
+  \log|\det J_{T^{-1}}(\zeta)| = \zeta_2
+\end{equation*}
+
+Approximating $\zeta_i$ with a Gaussian distribution with mean $\mu_i$ and scale $\exp(\omega_i)$, the approximated 
+variational space is given by:
+
+\begin{equation*}
+  \Phi = \{\mu_i, \omega_i\}, i = 0, 1, 2 = \mathbb{R}^6
+\end{equation*}
+
+
+Given the variational approximation, the elliptical standardization is given by:
+
+\begin{align*}
+  \eta_i &= S_{\phi}(\zeta_i) = \frac{\zeta_i - \mu_i}{\exp(\omega_i)}, i = 0, 1, 2 \\
+  \zeta_i &= S_{\phi}^{-1}(\eta_i) = \mu_i + \eta_i \exp(\omega_i)
+\end{align*}
+
+
+Therefore the objective function is given by:
+
+\begin{align*}
+  \mu_i^*, \omega_i^* &= \underset{\mu_i, \omega_i}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x, \theta_1, \theta_2, \theta_3) + \zeta_2 \big] + \omega_0 + \omega_1 + \omega_2 \\
+  &= \underset{\mu_i, \omega_i}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \theta_1, \theta_2, \theta_3) + \log p(\theta_0, \theta_1, \theta_2) + \zeta_2 \big] + \omega_0 + \omega_1 + \omega_2 \\
+  &= \underset{\mu_i, \omega_i}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \theta_1, \theta_2, \theta_3) + \log p(\theta_0) + \log p (\theta_1) + \log p(\theta_2) + \zeta_2 \big] + \omega_0 + \omega_1 + \omega_2 \\
+\end{align*}
+
+\end{document}

@@ -66,8 +66,8 @@ Therefore the objective function is given by:
 
 \begin{align*}
   \mu^*, \omega^* &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x, \mu + \eta\exp(\omega)) \big] + \omega \\
-  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \mu + \eta\exp(\omega)) \log p(\mu + \eta \exp(\omega))] + \omega \\
-  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \mu + \eta\exp(\omega))] + \omega
+  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \mu + \eta\exp(\omega)) + \log p(\mu + \eta \exp(\omega))] + \omega \\
+  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \mu + \eta\exp(\omega))] + \omega, \quad \text{since the prior on $\theta$ is flat}
 \end{align*}
 
 \end{document}

@@ -36,7 +36,7 @@
 Consider a Bernoulli random variable with an unknown success probability $\theta$ with a flat prior on $\theta$. Formally:
 
 \begin{align*}
-  X &\sim Bernoulli(\theta), \quad 0 < \theta <1\\
+  X &\sim \text{Bernoulli}(\theta), \quad 0 < \theta <1\\
   p(\theta) &\varpropto 1
 \end{align*}
 
@@ -73,7 +73,7 @@ Therefore the objective function is given by:
 \begin{align*}
   \mu^*, \omega^* &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x, \zeta) + \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta)) \big] + \omega, \quad \zeta = \mu + \eta\exp(\omega) \\
   &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \zeta) + \log p(\zeta) + \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta))] + \omega \\
-  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \zeta) + \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta))] + \omega
+  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \zeta) + \log T^{-1}(\zeta) + \log(1 - T^{-1}(\zeta))] + \omega, \quad \text{since the prior on $\theta$ is flat}
 \end{align*}
 
 \end{document}
