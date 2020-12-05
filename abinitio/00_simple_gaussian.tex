@@ -33,6 +33,41 @@
   
 \maketitle
 
+Consider a Gaussian random variable with an unknown mean $\theta$ and known variance $\sigma_0$ with a flat prior on
+the mean. Formally:
 
+\begin{align*}
+  X &\sim \mathcal{N}(\theta, \sigma_0^2)\\
+  p(\theta) &\varpropto 1
+\end{align*}
+
+Since the domain of $\theta$ is not constrained, 
+
+\begin{align*}
+  \zeta &= T(\theta) = \theta \\
+  \theta &= T^{-1}(\zeta) = \zeta
+\end{align*}
+
+Therefore the log determinant of the jacobian of the inverse transform evaluates to 0. Approximating $\zeta$ with a 
+Gaussian distribution with mean $\mu$ and scale $\exp(\omega)$, the approximated variational space is given by:
+
+\begin{equation*}
+  \Phi = \{\mu, \omega\} = \mathbb{R}^2
+\end{equation*}
+
+Given the variational approximation, the elliptical standardization is given by:
+
+\begin{align*}
+  \eta &= S_{\phi}(\zeta) = \frac{\zeta - \mu}{\exp(\omega)} \\
+  \zeta &= S_{\phi}^{-1}(\eta) = \mu + \eta \exp(\omega)
+\end{align*}
+
+Therefore the objective function is given by:
+
+\begin{align*}
+  \mu^*, \omega^* &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x, \mu + \eta\exp(\omega)) \big] + \omega \\
+  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \mu + \eta\exp(\omega)) \log p(\mu + \eta \exp(\omega))] + \omega \\
+  &= \underset{\mu, \omega}{\text{argmax}}\,\mathbb{E}_\eta\big[\log p(x | \mu + \eta\exp(\omega))] + \omega
+\end{align*}
 
 \end{document}
