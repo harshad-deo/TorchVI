@@ -8,6 +8,8 @@ simple_example("01_simple_bernoulli")
 
 simple_example("02_beta_bernoulli")
 
+simple_example("03_linear_regression")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),
