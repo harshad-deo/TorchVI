@@ -1,0 +1,17 @@
+load("//format:format.bzl", "format_py")
+load("@py_deps//:requirements.bzl", "requirement")
+
+py_library(
+    name = "fix_seed",
+    srcs = ["fix_seed.py"],
+    deps = [
+        requirement("torch"),
+        requirement("numpy"),
+    ],
+    visibility = ["//visibility:public"]
+)
+
+format_py(
+    name = "fmt",
+    srcs = glob(["*.py"]),
+)

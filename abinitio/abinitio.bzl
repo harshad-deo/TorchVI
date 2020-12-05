@@ -20,6 +20,7 @@ def simple_example(file_name):
             requirement("torch"),
             requirement("numpy"),
             requirement("tqdm"),
+            "//utils:fix_seed"
         ],
         main = file_name_py,
     )

@@ -1,11 +1,7 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torch import distributions, optim
 from tqdm import tqdm
-
-torch.manual_seed(42)
-np.random.seed(42)
 
 
 class Model:
@@ -59,6 +55,11 @@ def fit(xs, num_epochs):
 
 
 if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+    from utils.fix_seed import fix_seed
+
+    fix_seed(42)
+
     num_samples = 100
     p_known = 0.65
 
