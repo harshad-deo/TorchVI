@@ -75,6 +75,7 @@ if __name__ == '__main__':
 
     ax1.plot(losses)
     ax1.set_ylabel('Log Loss')
+    ax1.set_xlabel('Epoch')
 
     zeta = np.random.normal(loc=mus[-1], scale=sds[-1], size=num_samples * 10)
     actual = 1 / (1 + np.exp(-zeta))
@@ -84,9 +85,11 @@ if __name__ == '__main__':
     beta = beta_0 + num_samples - sample_success
     expected = np.random.beta(a=alpha, b=beta, size=num_samples * 10)
 
-    _ = ax2.hist(actual, label='actual', alpha=0.5)
-    _ = ax2.hist(expected, label='expected', alpha=0.5)
-    _ = ax2.legend()
+    ax2.hist(actual, label='actual', alpha=0.5)
+    ax2.hist(expected, label='expected', alpha=0.5)
+    ax2.set_ylabel('$p(\\theta$)')
+    ax2.set_xlabel('$\\theta$')
+    ax2.legend()
 
     plt.show()
 

@@ -82,6 +82,7 @@ if __name__ == "__main__":
     ax3.hlines(std_expected, 0, num_epochs, label='expected', linestyle='dashed', color='red')
     ax3.legend()
     ax3.set_ylabel('$\sigma$')
+    ax3.set_xlabel('Epoch')
 
     plt.show()
 
