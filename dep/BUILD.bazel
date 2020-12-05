@@ -1,0 +1,12 @@
+load(":latex.bzl", "latex_dep")
+load("@bazel_latex//packages:packages.bzl", "latex_package")
+
+latex_package(
+    name = "setspace",
+    srcs = latex_dep("setspace"),
+)
+
+latex_package(
+    name = "mathtools",
+    srcs = latex_dep("mathtools"),
+)

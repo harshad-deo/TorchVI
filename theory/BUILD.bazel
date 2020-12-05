@@ -1,22 +1,10 @@
 load("@bazel_latex//:latex.bzl", "latex_document")
-load("@bazel_latex//packages:packages.bzl", "latex_package")
-load("//dep:latex.bzl", "latex_dep")
-
-latex_package(
-    name = "setspace",
-    srcs = latex_dep("setspace"),
-)
-
-latex_package(
-    name = "mathtools",
-    srcs = latex_dep("mathtools"),
-)
 
 latex_document(
     name = "introduction",
     srcs = [
-        ":mathtools",
-        ":setspace",
+        "//dep:mathtools",
+        "//dep:setspace",
         "@bazel_latex//packages:amsmath",
         "@bazel_latex//packages:amssymb",
         "@bazel_latex//packages:calc",
