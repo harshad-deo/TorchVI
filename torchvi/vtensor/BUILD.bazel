@@ -1,0 +1,22 @@
+load("//format:format.bzl", "format_py")
+load("@py_deps//:requirements.bzl", "requirement")
+
+py_library(
+    name = "vtensor",
+    srcs = [
+        "__init__.py",
+        "unconstrained.py",
+        "utils.py",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//torchvi",
+        requirement("torch"),
+        requirement("numpy"),
+    ],
+)
+
+format_py(
+    name = "fmt",
+    srcs = glob(["*.py"]),
+)

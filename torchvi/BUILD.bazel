@@ -1,0 +1,20 @@
+load("//format:format.bzl", "format_py")
+load("@py_deps//:requirements.bzl", "requirement")
+
+py_library(
+    name = "torchvi",
+    srcs = [
+        "__init__.py",
+        "vmodule.py",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("torch"),
+        requirement("numpy"),
+    ],
+)
+
+format_py(
+    name = "fmt",
+    srcs = glob(["*.py"]),
+)

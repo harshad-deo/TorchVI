@@ -1,0 +1,9 @@
+load(":examples.bzl", "simple_example")
+load("//format:format.bzl", "format_py")
+
+simple_example("simple_gaussian")
+
+format_py(
+    name = "fmt",
+    srcs = glob(["*.py"]),
+)
