@@ -1,21 +1,20 @@
-import math
 import numpy as np
 import torch
 from torch import nn, distributions, optim
+from torch.distributions.bernoulli import Bernoulli
 from tqdm import tqdm
 
 from torchvi import vtensor
 
 
 class Model(nn.Module):
-    def __init__(self, scale_known):
+    def __init__(self):
         super().__init__()
-        self.x = vtensor.Unconstrained(1)
-        self.scale_known = scale_known
+        self.x = vtensor.LowerUpperBound(size=1, lower_bound=0, upper_bound=1)
 
     def forward(self, xs, device):
-        zeta, constraint_contrib = self.x(device)
-        dist = distributions.Normal(zeta, self.scale_known)
+        theta, constraint_contrib = self.x(device)
+        dist = distributions.Bernoulli(probs=theta)
         lp = dist.log_prob(xs).sum()
 
         return lp + constraint_contrib
@@ -24,11 +23,11 @@ class Model(nn.Module):
         return torch.squeeze(self.x.sample(size, device))
 
 
-def fit(sigma_known, xs, num_epochs, num_samples):
+def fit(xs, num_epochs, num_samples):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f'Fitting on: {device}')
 
-    model = Model(sigma_known)
+    model = Model()
     model = model.to(device)
     xs = xs.to(device)
 
@@ -52,28 +51,30 @@ def fit(sigma_known, xs, num_epochs, num_samples):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     from utils.fix_seed import fix_seed
+
     fix_seed(42)
 
     num_samples = 100
+    p_known = 0.65
 
-    mu_known = -4
-    sigma_known = 3
+    xs = torch.bernoulli(torch.ones((num_samples, )), p=p_known)
+    num_epochs = 1000
 
-    xs = torch.normal(mu_known, sigma_known, size=(num_samples, ))
+    model, losses, samples_actual = fit(xs, num_epochs, num_samples)
 
-    num_epochs = 200
-    model, losses, actual_samples = fit(sigma_known, xs, num_epochs, num_samples)
-
-    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
 
     ax1.plot(losses)
     ax1.set_ylabel('Log Loss')
     ax1.set_xlabel('Epoch')
 
-    expected_samples = np.random.normal(loc=mu_known, scale=sigma_known / math.sqrt(num_samples), size=num_samples * 10)
+    sample_success = torch.sum(xs)
+    alpha = 1 + sample_success
+    beta = 1 + num_samples - sample_success
+    samples_expected = np.random.beta(a=alpha, b=beta, size=num_samples * 10)
 
-    ax2.hist(actual_samples, label='actual', alpha=0.5)
-    ax2.hist(expected_samples, label='expected', alpha=0.5)
+    ax2.hist(samples_actual, label='actual', alpha=0.5)
+    ax2.hist(samples_expected, label='expected', alpha=0.5)
     ax2.set_ylabel('$p(\\theta$)')
     ax2.set_xlabel('$\\theta$')
     ax2.legend()

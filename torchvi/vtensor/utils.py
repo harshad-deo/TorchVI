@@ -13,3 +13,9 @@ def to_size(x):
     if isinstance(x, Iterable) and all([isinstance(y, int) for y in x]):
         return x
     raise TypeError(f'Bad type for vtensor size: {type(x)}')
+
+
+def check_numeric(x, desc):
+    if isinstance(x, float) or isinstance(x, int):
+        return
+    raise TypeError(f'{desc}: is not numeric')

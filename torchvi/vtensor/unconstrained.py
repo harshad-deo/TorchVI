@@ -16,14 +16,11 @@ class Unconstrained(VModule):
         self.mu.data.normal_()
         self.omega.data.normal_()
 
-        self.register_buffer('degen', torch.zeros(1))
-
     def forward(self, device):
         eta = torch.randn(self.size, device=device)
-        y = self.mu + eta * self.omega.exp()
-        entropy_contrib = self.omega.sum()
-
-        return y, self.degen, self.degen, entropy_contrib
+        zeta = self.mu + eta * self.omega.exp()
+        constraint_contrib = self.omega.sum()
+        return zeta, constraint_contrib
 
     def sample(self, size, device):
         sample_size = [size] + self.size

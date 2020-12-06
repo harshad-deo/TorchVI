@@ -5,6 +5,7 @@ py_library(
     name = "vtensor",
     srcs = [
         "__init__.py",
+        "lowerupperbound.py",
         "unconstrained.py",
         "utils.py",
     ],
