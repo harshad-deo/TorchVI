@@ -6,8 +6,8 @@ py_library(
     srcs = [
         "__init__.py",
         "beta.py",
+        "constant.py",
         "normal.py",
-        "constant.py"
     ],
     visibility = ["//visibility:public"],
     deps = [
