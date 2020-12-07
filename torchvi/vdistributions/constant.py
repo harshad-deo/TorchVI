@@ -5,7 +5,7 @@ import torch
 from torchvi.vmodule import VModule
 
 
-class Deterministic(VModule):
+class Constant(VModule):
     def __init__(self, value):
         super().__init__()
         self.register_buffer('value', value)
@@ -18,7 +18,7 @@ class Deterministic(VModule):
         return self.value.repeat(size)
 
 
-def wrap_if_deterministic(x):
+def wrap_if_constant(x):
     if isinstance(x, VModule):
         return x
     if isinstance(x, int) or isinstance(x, float):
@@ -29,4 +29,4 @@ def wrap_if_deterministic(x):
         tensor = x
     else:
         raise TypeError(f'Unsupported type for wrapping. Expected int, float or tensor, got: {type(x)}')
-    return Deterministic(tensor)
+    return Constant(tensor)
