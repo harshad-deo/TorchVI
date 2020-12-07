@@ -5,6 +5,8 @@ simple_example("simple_gaussian")
 
 simple_example("simple_bernoulli")
 
+simple_example("beta_bernoulli")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),

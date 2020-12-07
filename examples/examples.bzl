@@ -18,6 +18,7 @@ def simple_example(name):
             requirement("tqdm"),
             "//torchvi",
             "//torchvi/vtensor",
+            "//torchvi/vdistributions",
             "//utils:fix_seed",
         ],
         main = file_name_py,
