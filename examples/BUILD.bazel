@@ -9,6 +9,8 @@ simple_example("beta_bernoulli")
 
 simple_example("linear_regression")
 
+simple_example("logistic_regression")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),

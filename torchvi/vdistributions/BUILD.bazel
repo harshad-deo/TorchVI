@@ -7,8 +7,8 @@ py_library(
         "__init__.py",
         "beta.py",
         "constant.py",
+        "half_normal.py",
         "normal.py",
-        "half_normal.py"
     ],
     visibility = ["//visibility:public"],
     deps = [

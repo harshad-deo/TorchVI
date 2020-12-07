@@ -1,4 +1,3 @@
-import math
 import numpy as np
 import torch
 from torch import optim, distributions, nn
@@ -36,7 +35,15 @@ class Model(nn.Module):
 
 
 def fit(reg_prior_mu, reg_prior_sd, noise_prior_scale, xs, ys, num_epochs):
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f'Fitting on: {device}')
+
     model = Model(reg_prior_mu, reg_prior_sd, noise_prior_scale)
+
+    model = model.to(device)
+    xs = xs.to(device)
+    ys = ys.to(device)
+
     optimizer = optim.Adam(model.parameters(), lr=7e-2)
 
     losses = np.zeros(num_epochs)
