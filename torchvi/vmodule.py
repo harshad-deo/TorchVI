@@ -7,7 +7,7 @@ class VModule(nn.Module, ABC):
         super().__init__()
 
     @abstractmethod
-    def sample(self, size, device):
+    def sample(self, x, size, device):
         pass
 
     @property

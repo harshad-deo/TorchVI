@@ -6,6 +6,7 @@ py_library(
     srcs = [
         "__init__.py",
         "beta.py",
+        "deterministic.py"
     ],
     visibility = ["//visibility:public"],
     deps = [

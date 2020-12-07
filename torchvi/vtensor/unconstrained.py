@@ -16,13 +16,13 @@ class Unconstrained(VModule):
         self.mu.data.normal_()
         self.omega.data.normal_()
 
-    def forward(self, device):
+    def forward(self, x, device):
         eta = torch.randn(self.size, device=device)
         zeta = self.mu + eta * self.omega.exp()
         constraint_contrib = torch.squeeze(self.omega.sum())
         return zeta, constraint_contrib
 
-    def sample(self, size, device):
+    def sample(self, x, size, device):
         sample_size = [size] + self.size
         eta = torch.randn(sample_size, device=device)
         mu = self.mu.detach().unsqueeze(0)

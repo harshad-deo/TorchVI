@@ -9,17 +9,17 @@ from torchvi import vdistributions
 class Model(nn.Module):
     def __init__(self, alpha, beta):
         super().__init__()
-        self.x = vdistributions.Beta(1, alpha, beta)
+        self.theta = vdistributions.Beta(1, alpha, beta)
 
     def forward(self, xs, device):
-        theta, constraint_contrib = self.x(device)
+        theta, constraint_contrib = self.theta(None, device)
         dist = distributions.Bernoulli(probs=theta)
         lp = dist.log_prob(xs).sum()
 
         return lp + constraint_contrib
 
     def sample(self, size, device):
-        return torch.squeeze(self.x.sample(size, device))
+        return torch.squeeze(self.theta.sample(None, size, device))
 
 
 def fit(alpha, beta, xs, num_epochs, num_samples):

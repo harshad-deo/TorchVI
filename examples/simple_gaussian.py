@@ -10,18 +10,18 @@ from torchvi import vtensor
 class Model(nn.Module):
     def __init__(self, scale_known):
         super().__init__()
-        self.x = vtensor.Unconstrained(1)
+        self.mu = vtensor.Unconstrained(1)
         self.scale_known = scale_known
 
     def forward(self, xs, device):
-        zeta, constraint_contrib = self.x(device)
-        dist = distributions.Normal(zeta, self.scale_known)
+        mu, constraint_contrib = self.mu(None, device)
+        dist = distributions.Normal(mu, self.scale_known)
         lp = dist.log_prob(xs).sum()
 
         return lp + constraint_contrib
 
     def sample(self, size, device):
-        return torch.squeeze(self.x.sample(size, device))
+        return torch.squeeze(self.mu.sample(None, size, device))
 
 
 def fit(sigma_known, xs, num_epochs, num_samples):

@@ -9,17 +9,17 @@ from torchvi import vtensor
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.x = vtensor.LowerUpperBound(size=1, lower_bound=0, upper_bound=1)
+        self.theta = vtensor.LowerUpperBound(size=1, lower_bound=0, upper_bound=1)
 
     def forward(self, xs, device):
-        theta, constraint_contrib = self.x(device)
+        theta, constraint_contrib = self.theta(None, device)
         dist = distributions.Bernoulli(probs=theta)
         lp = dist.log_prob(xs).sum()
 
         return lp + constraint_contrib
 
     def sample(self, size, device):
-        return torch.squeeze(self.x.sample(size, device))
+        return torch.squeeze(self.theta.sample(None, size, device))
 
 
 def fit(xs, num_epochs, num_samples):
