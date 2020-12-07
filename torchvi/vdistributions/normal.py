@@ -12,10 +12,10 @@ class Normal(VModule):
         self.size = size
         self.loc = wrap_if_constant(loc)
         self.scale = wrap_if_constant(scale)
-        self.backing = Unconstrained(size)
+        self.node = Unconstrained(size)
 
     def forward(self, x):
-        zeta, constraint_contrib = self.backing.forward(x)
+        zeta, constraint_contrib = self.node.forward(x)
 
         loc, loc_constraint = self.loc.forward(x)
         scale, scale_constraint = self.scale.forward(x)
@@ -27,7 +27,7 @@ class Normal(VModule):
         return zeta, constraint_contrib
 
     def sample(self, x, size):
-        return self.backing.sample(x, size)
+        return self.node.sample(x, size)
 
     def extra_repr(self):
         return f'size={self.size}, loc={self.loc}, scale={self.scale}'

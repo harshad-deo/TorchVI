@@ -12,10 +12,10 @@ class Beta(VModule):
         self.size = size
         self.alpha = wrap_if_constant(alpha)
         self.beta = wrap_if_constant(beta)
-        self.backing = LowerUpperBound(size, 0, 1)
+        self.node = LowerUpperBound(size, 0, 1)
 
     def forward(self, x):
-        zeta, constraint_contrib = self.backing.forward(x)
+        zeta, constraint_contrib = self.node.forward(x)
 
         alpha, alpha_constraint = self.alpha.forward(x)
         beta, beta_constraint = self.beta.forward(x)
@@ -27,7 +27,7 @@ class Beta(VModule):
         return zeta, constraint_contrib
 
     def sample(self, x, size):
-        return self.backing.sample(x, size)
+        return self.node.sample(x, size)
 
     def extra_repr(self):
         return f'size={self.size}, alpha={self.alpha}, beta={self.beta}'
