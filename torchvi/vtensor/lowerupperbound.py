@@ -16,7 +16,7 @@ class LowerUpperBound(Unconstrained):
         zeta, constraint_contrib = super().forward(device)
 
         jac_contrib = zeta - 2 * (1 + (-zeta).exp()).log()
-        constraint_contrib = torch.squeeze(constraint_contrib) + jac_contrib
+        constraint_contrib += torch.squeeze(jac_contrib)
 
         return torch.sigmoid(zeta), constraint_contrib
 

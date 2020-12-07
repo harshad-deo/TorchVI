@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 from torch import nn, distributions, optim
-from torch.distributions.bernoulli import Bernoulli
 from tqdm import tqdm
 
 from torchvi import vtensor
