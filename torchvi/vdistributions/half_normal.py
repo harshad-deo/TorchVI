@@ -1,4 +1,3 @@
-import torch
 from torch import distributions
 
 from torchvi.vmodule import VModule

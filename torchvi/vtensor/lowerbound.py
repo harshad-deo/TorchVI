@@ -16,5 +16,9 @@ class LowerBound(Unconstrained):
 
         return self.lower_bound + zeta.exp(), constraint_contrib
 
+    def sample(self, x, size):
+        zeta = super().sample(x, size)
+        return self.lower_bound + torch.exp(zeta)
+
     def extra_repr(self):
         return f'size={self.size}, lower_bound={self.lower_bound}'
