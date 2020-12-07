@@ -20,8 +20,8 @@ class Model(nn.Module):
 
         return lp + constraint_contrib
 
-    def sample(self, size, device):
-        return torch.squeeze(self.mu.sample(None, size, device))
+    def sample(self, size):
+        return torch.squeeze(self.mu.sample(None, size))
 
 
 def fit(sigma_known, xs, num_epochs, num_samples):
@@ -44,7 +44,7 @@ def fit(sigma_known, xs, num_epochs, num_samples):
         optimizer.step()
 
     losses = np.log(losses)
-    samples = model.sample(num_samples * 10, device).cpu().numpy()
+    samples = model.sample(num_samples * 10).cpu().numpy()
 
     return model.cpu(), losses, samples
 

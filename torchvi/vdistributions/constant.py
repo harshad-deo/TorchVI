@@ -14,7 +14,7 @@ class Constant(VModule):
     def forward(self, x):
         return self.value, self.constraint_contrib
 
-    def sample(self, x, size, device):
+    def sample(self, x, size):
         return self.value.repeat(size)
 
 

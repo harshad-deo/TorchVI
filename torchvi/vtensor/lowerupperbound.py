@@ -20,8 +20,8 @@ class LowerUpperBound(Unconstrained):
 
         return torch.sigmoid(zeta), constraint_contrib
 
-    def sample(self, x, size, device):
-        zeta = super().sample(x, size, device)
+    def sample(self, x, size):
+        zeta = super().sample(x, size)
         return torch.sigmoid(zeta)
 
     def extra_repr(self):

@@ -26,8 +26,8 @@ class Beta(VModule):
 
         return zeta, constraint_contrib
 
-    def sample(self, x, size, device):
-        return self.backing.sample(x, size, device)
+    def sample(self, x, size):
+        return self.backing.sample(x, size)
 
     def extra_repr(self):
         return f'size={self.size}, alpha={self.alpha}, beta={self.beta}'

@@ -24,7 +24,9 @@ class Unconstrained(VModule):
         constraint_contrib = torch.squeeze(self.omega.sum())
         return zeta, constraint_contrib
 
-    def sample(self, x, size, device):
+    def sample(self, x, size):
+        device = self.mu.device
+
         sample_size = [size] + self.size
         eta = torch.randn(sample_size, device=device)
         mu = self.mu.detach().unsqueeze(0)
