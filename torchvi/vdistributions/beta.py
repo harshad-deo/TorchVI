@@ -14,11 +14,11 @@ class Beta(VModule):
         self.beta = wrap_if_constant(beta)
         self.backing = LowerUpperBound(size, 0, 1)
 
-    def forward(self, x, device):
-        zeta, constraint_contrib = self.backing.forward(x, device)
+    def forward(self, x):
+        zeta, constraint_contrib = self.backing.forward(x)
 
-        alpha, alpha_constraint = self.alpha.forward(x, device)
-        beta, beta_constraint = self.beta.forward(x, device)
+        alpha, alpha_constraint = self.alpha.forward(x)
+        beta, beta_constraint = self.beta.forward(x)
         constraint_contrib += alpha_constraint + beta_constraint
 
         prior = distributions.Beta(alpha, beta)

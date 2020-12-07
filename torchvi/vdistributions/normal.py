@@ -14,11 +14,11 @@ class Normal(VModule):
         self.scale = wrap_if_constant(scale)
         self.backing = Unconstrained(size)
 
-    def forward(self, x, device):
-        zeta, constraint_contrib = self.backing.forward(x, device)
+    def forward(self, x):
+        zeta, constraint_contrib = self.backing.forward(x)
 
-        loc, loc_constraint = self.loc.forward(x, device)
-        scale, scale_constraint = self.scale.forward(x, device)
+        loc, loc_constraint = self.loc.forward(x)
+        scale, scale_constraint = self.scale.forward(x)
         constraint_contrib += loc_constraint + scale_constraint
 
         prior = distributions.Normal(loc, scale)

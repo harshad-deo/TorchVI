@@ -11,8 +11,8 @@ class Model(nn.Module):
         super().__init__()
         self.theta = vdistributions.Beta(1, alpha, beta)
 
-    def forward(self, xs, device):
-        theta, constraint_contrib = self.theta(None, device)
+    def forward(self, xs):
+        theta, constraint_contrib = self.theta(None)
         dist = distributions.Bernoulli(probs=theta)
         lp = dist.log_prob(xs).sum()
 
@@ -36,7 +36,7 @@ def fit(alpha, beta, xs, num_epochs, num_samples):
 
     for i in tqdm(range(num_epochs)):
         optimizer.zero_grad()
-        loss = -model(xs, device)
+        loss = -model(xs)
         losses[i] = loss.item()
         loss.backward()
         optimizer.step()

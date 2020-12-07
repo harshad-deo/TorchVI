@@ -12,11 +12,11 @@ class LowerUpperBound(Unconstrained):
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
 
-    def forward(self, x, device):
-        zeta, constraint_contrib = super().forward(x, device)
+    def forward(self, x):
+        zeta, constraint_contrib = super().forward(x)
 
         jac_contrib = zeta - 2 * (1 + (-zeta).exp()).log()
-        constraint_contrib += torch.squeeze(jac_contrib)
+        constraint_contrib += jac_contrib.sum()
 
         return torch.sigmoid(zeta), constraint_contrib
 

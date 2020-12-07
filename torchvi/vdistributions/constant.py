@@ -11,7 +11,7 @@ class Constant(VModule):
         self.register_buffer('value', value)
         self.register_buffer('constraint_contrib', torch.squeeze(torch.zeros(1)))
 
-    def forward(self, x, device):
+    def forward(self, x):
         return self.value, self.constraint_contrib
 
     def sample(self, x, size, device):

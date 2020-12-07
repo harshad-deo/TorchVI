@@ -13,8 +13,8 @@ class Model(nn.Module):
         self.mu = vtensor.Unconstrained(1)
         self.scale_known = scale_known
 
-    def forward(self, xs, device):
-        mu, constraint_contrib = self.mu(None, device)
+    def forward(self, xs):
+        mu, constraint_contrib = self.mu(None)
         dist = distributions.Normal(mu, self.scale_known)
         lp = dist.log_prob(xs).sum()
 
@@ -38,7 +38,7 @@ def fit(sigma_known, xs, num_epochs, num_samples):
 
     for i in tqdm(range(num_epochs)):
         optimizer.zero_grad()
-        loss = -model(xs, device)
+        loss = -model(xs)
         losses[i] = loss.item()
         loss.backward()
         optimizer.step()
