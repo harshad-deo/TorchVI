@@ -7,6 +7,7 @@ py_library(
         "__init__.py",
         "lowerbound.py",
         "lowerupperbound.py",
+        "simplex.py",
         "unconstrained.py",
         "utils.py",
     ],

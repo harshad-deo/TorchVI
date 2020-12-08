@@ -1,7 +1,6 @@
-from torchvi.vtensor import unconstrained
-from torchvi.vtensor import lowerupperbound
-from torchvi.vtensor import lowerbound
+from torchvi.vtensor import unconstrained, lowerupperbound, lowerbound, simplex
 
 Unconstrained = unconstrained.Unconstrained
 LowerUpperBound = lowerupperbound.LowerUpperBound
 LowerBound = lowerbound.LowerBound
+Simplex = simplex.Simplex

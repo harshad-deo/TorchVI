@@ -11,6 +11,8 @@ simple_example("linear_regression")
 
 simple_example("logistic_regression")
 
+simple_example("simple_categorical")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),

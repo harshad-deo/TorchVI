@@ -27,7 +27,7 @@ class Unconstrained(VModule):
     def sample(self, x, size):
         device = self.mu.device
 
-        sample_size = [size] + self.size
+        sample_size = [size] + list(self.size)
         eta = torch.randn(sample_size, device=device)
         mu = self.mu.detach().unsqueeze(0)
         omega = self.omega.detach().unsqueeze(0)
