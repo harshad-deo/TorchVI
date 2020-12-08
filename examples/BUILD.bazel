@@ -13,6 +13,8 @@ simple_example("logistic_regression")
 
 simple_example("simple_categorical")
 
+simple_example("dirichlet_categorical")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),
