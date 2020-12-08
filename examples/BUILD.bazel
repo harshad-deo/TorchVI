@@ -17,6 +17,8 @@ simple_example("dirichlet_categorical")
 
 simple_example("simple_gaussian_multivariate")
 
+simple_example("robust_linear_regression")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),

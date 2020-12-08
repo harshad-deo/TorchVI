@@ -7,8 +7,6 @@ from torchvi.vtensor.simplex import Simplex
 from torchvi.vdistributions.constant import wrap_if_constant
 
 
-
-
 class Dirichlet(VModule):
     def __init__(self, alpha):
         super().__init__()
