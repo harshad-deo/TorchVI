@@ -10,6 +10,7 @@ py_library(
         "exponential.py",
         "dirichlet.py",
         "half_normal.py",
+        "laplace.py",
         "normal.py",
     ],
     visibility = ["//visibility:public"],

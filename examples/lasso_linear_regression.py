@@ -3,7 +3,7 @@ from tqdm import tqdm
 import torch
 from torch import nn, distributions, optim
 
-from torchvi.vdistributions import Normal, HalfNormal, Exponential
+from torchvi.vdistributions import Normal, HalfNormal, Laplace
 
 
 class StandardRegression(nn.Module):
@@ -38,25 +38,23 @@ class StandardRegression(nn.Module):
         return {'ys': ys.cpu().numpy(), 'theta_2': theta_2.cpu().numpy()}
 
 
-class RobustRegression(nn.Module):
-    def __init__(self, reg_prior_mu, reg_prior_sd, noise_prior_scale, rate_prior):
+class LassoRegression(nn.Module):
+    def __init__(self, reg_prior_mu, reg_prior_sd, noise_prior_scale):
         super().__init__()
-        self.theta_0 = Normal(1, reg_prior_mu, reg_prior_sd)
-        self.theta_1 = Normal(1, reg_prior_mu, reg_prior_sd)
+        self.theta_0 = Laplace(1, reg_prior_mu, reg_prior_sd)
+        self.theta_1 = Laplace(1, reg_prior_mu, reg_prior_sd)
         self.theta_2 = HalfNormal(1, noise_prior_scale)
-        self.theta_3 = Exponential(1, rate_prior)
 
     def forward(self, xs, ys):
         theta_0, theta_0_contrib = self.theta_0(None)
         theta_1, theta_1_contrib = self.theta_1(None)
         theta_2, theta_2_contrib = self.theta_2(None)
-        theta_3, theta_3_contrib = self.theta_3(None)
 
         y_mu = theta_0 + theta_1 * xs
-        dist = distributions.StudentT(df=theta_3, loc=y_mu, scale=theta_2)
+        dist = distributions.Normal(loc=y_mu, scale=theta_2)
 
         data_lp = dist.log_prob(ys).sum()
-        constraint_contrib = theta_0_contrib + theta_1_contrib + theta_2_contrib + theta_3_contrib
+        constraint_contrib = theta_0_contrib + theta_1_contrib + theta_2_contrib
 
         return data_lp + constraint_contrib
 
@@ -68,9 +66,8 @@ class RobustRegression(nn.Module):
         ys = theta_0 + xs * theta_1
 
         theta_2 = torch.squeeze(self.theta_2.sample(None, size))
-        theta_3 = torch.squeeze(self.theta_3.sample(None, size))
 
-        return {'ys': ys.cpu().numpy(), 'theta_2': theta_2.cpu().numpy(), 'theta_3': theta_3.cpu().numpy()}
+        return {'ys': ys.cpu().numpy(), 'theta_2': theta_2.cpu().numpy()}
 
 
 def fit(desc, model, lr, xs, ys, num_epochs):
@@ -124,14 +121,14 @@ if __name__ == "__main__":
     standard_model = StandardRegression(0, 1, 1)
     standard_model, standard_loss, standard_samples = fit('standard', standard_model, 7e-2, xs, ys, num_epochs)
 
-    robust_model = RobustRegression(0, 1, 1, 1)
-    robust_model, robust_loss, robust_samples = fit('robust', robust_model, 7e-2, xs, ys, num_epochs)
+    lasso_model = LassoRegression(0, 1, 1)
+    lasso_model, lasso_loss, lasso_samples = fit('lasso', lasso_model, 7e-2, xs, ys, num_epochs)
 
     ys_standard = standard_samples['ys']
     ys_standard_quantiles = np.quantile(ys_standard, [0.025, 0.5, 0.975], axis=0)
 
-    ys_robust = robust_samples['ys']
-    ys_robust_quantiles = np.quantile(ys_robust, [0.025, 0.5, 0.975], axis=0)
+    ys_lasso = lasso_samples['ys']
+    ys_lasso_quantiles = np.quantile(ys_lasso, [0.025, 0.5, 0.975], axis=0)
 
     plt.scatter(xs, ys, label='Data')
     plt.plot(xs, ys_true, label='True Regression', color='black')
@@ -144,13 +141,13 @@ if __name__ == "__main__":
                      alpha=0.3,
                      label='95% CI for standard regression line')
 
-    plt.plot(xs, ys_robust_quantiles[1, :], label='Robust regression median', color='green', linestyle='dashed')
+    plt.plot(xs, ys_lasso_quantiles[1, :], label='Lasso regression median', color='green', linestyle='dashed')
     plt.fill_between(xs,
-                     ys_robust_quantiles[0, :],
-                     ys_robust_quantiles[2, :],
+                     ys_lasso_quantiles[0, :],
+                     ys_lasso_quantiles[2, :],
                      color='green',
                      alpha=0.3,
-                     label='95% CI for robust regression line')
+                     label='95% CI for lasso regression line')
 
     plt.xlabel('x')
     plt.ylabel('y')
