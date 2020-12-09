@@ -27,6 +27,12 @@ simple_example(
     with_pandas = True,
 )
 
+simple_example(
+    "negbinom_regression",
+    data = ["@poisson_sim//file"],
+    with_pandas = True,
+)
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),
