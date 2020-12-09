@@ -58,7 +58,7 @@ if __name__ == "__main__":
     xs = dist.sample([num_samples])
 
     num_epochs = 2000
-    alpha = [1, 2, 3, 4, 5, 50]
+    alpha = [1, 2, 3, 4, 5, 50.0]
     model, losses, samples = fit(alpha, xs, num_epochs, num_samples)
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1)

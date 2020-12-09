@@ -118,10 +118,10 @@ if __name__ == "__main__":
 
     num_epochs = 5000
 
-    standard_model = StandardRegression(0, 1, 1)
+    standard_model = StandardRegression(0.0, 1.0, 1.0)
     standard_model, standard_loss, standard_samples = fit('standard', standard_model, 7e-2, xs, ys, num_epochs)
 
-    lasso_model = LassoRegression(0, 1, 1)
+    lasso_model = LassoRegression(0.0, 1.0, 1.0)
     lasso_model, lasso_loss, lasso_samples = fit('lasso', lasso_model, 7e-2, xs, ys, num_epochs)
 
     ys_standard = standard_samples['ys']

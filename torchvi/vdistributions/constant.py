@@ -22,9 +22,9 @@ def wrap_if_constant(x):
     if isinstance(x, VModule):
         return x
     if isinstance(x, int) or isinstance(x, float):
-        tensor = torch.tensor(x, dtype=torch.double, requires_grad=False)
+        tensor = torch.tensor(x, requires_grad=False)
     elif isinstance(x, Iterable):
-        tensor = torch.tensor(x, dtype=torch.double, requires_grad=False)
+        tensor = torch.tensor(x, requires_grad=False)
     elif isinstance(x, torch.Tensor):
         tensor = x
     else:

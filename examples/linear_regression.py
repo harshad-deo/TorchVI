@@ -78,7 +78,7 @@ if __name__ == "__main__":
     ys = intercept + slope * xs + noise_scale * torch.randn(num_samples)
 
     num_epochs = 5000
-    model, losses, samples = fit(0, 1, 1, xs, ys, num_epochs)
+    model, losses, samples = fit(0.0, 1.0, 1.0, xs, ys, num_epochs)
 
     fig, axs = plt.subplots(2, 2)
 
