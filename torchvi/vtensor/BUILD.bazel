@@ -5,8 +5,8 @@ py_library(
     name = "vtensor",
     srcs = [
         "__init__.py",
-        "covariance.py",
         "cholesky.py",
+        "covariance.py",
         "lowerbound.py",
         "lowerupperbound.py",
         "simplex.py",

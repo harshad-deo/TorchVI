@@ -1,6 +1,6 @@
 workspace(name = "torchvi")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 load("//rules:http_archive_ext.bzl", "http_archive_ext")
 
 http_archive(
@@ -143,5 +143,12 @@ pip_import(
 load("@py_deps//:requirements.bzl", "pip_install")
 
 pip_install()
+
+http_file(
+    name = "poisson_sim",
+    sha256 = "567f8cbb08132a92bd75e36bf9a13afb336f11783bd24698959809a82eacf33b",
+    urls = ["https://stats.idre.ucla.edu/stat/data/poisson_sim.csv"],
+    downloaded_file_path = "poisson_sim.csv"
+)
 
 register_toolchains("//:custom_py_toolchain")
