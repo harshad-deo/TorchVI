@@ -21,6 +21,12 @@ simple_example("robust_linear_regression")
 
 simple_example("lasso_linear_regression")
 
+simple_example(
+    "poisson_regression",
+    data = ["@poisson_sim//file"],
+    with_pandas = True,
+)
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),

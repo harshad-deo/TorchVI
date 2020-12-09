@@ -146,9 +146,9 @@ pip_install()
 
 http_file(
     name = "poisson_sim",
+    downloaded_file_path = "poisson_sim.csv",
     sha256 = "567f8cbb08132a92bd75e36bf9a13afb336f11783bd24698959809a82eacf33b",
     urls = ["https://stats.idre.ucla.edu/stat/data/poisson_sim.csv"],
-    downloaded_file_path = "poisson_sim.csv"
 )
 
 register_toolchains("//:custom_py_toolchain")
