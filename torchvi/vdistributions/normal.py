@@ -7,12 +7,12 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class Normal(VModule):
-    def __init__(self, size, loc, scale):
+    def __init__(self, size, loc, scale, name=None):
         super().__init__()
         self.size = size
-        self.loc = wrap_if_constant(loc)
-        self.scale = wrap_if_constant(scale)
-        self.node = Unconstrained(size)
+        self.node = Unconstrained(size=size, name=name)
+        self.loc = wrap_if_constant(loc, name=f'{self.node.backing.name}_loc')
+        self.scale = wrap_if_constant(scale, name=f'{self.node.backing.name}_scale')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)

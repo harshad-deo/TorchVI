@@ -72,8 +72,8 @@ if __name__ == "__main__":
 
     expected_samples = np.random.normal(loc=mu_known, scale=sigma_known / math.sqrt(num_samples), size=num_samples * 10)
 
-    ax2.hist(actual_samples, label='actual', alpha=0.5)
-    ax2.hist(expected_samples, label='expected', alpha=0.5)
+    ax2.hist(actual_samples, label='actual', alpha=0.5, density=True)
+    ax2.hist(expected_samples, label='expected', alpha=0.5, density=True)
     ax2.set_ylabel('$p(\\theta$)')
     ax2.set_xlabel('$\\theta$')
     ax2.legend()

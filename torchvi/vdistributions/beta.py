@@ -7,12 +7,13 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class Beta(VModule):
-    def __init__(self, size, alpha, beta):
+    def __init__(self, size, alpha, beta, name=None):
         super().__init__()
         self.size = size
-        self.alpha = wrap_if_constant(alpha)
-        self.beta = wrap_if_constant(beta)
-        self.node = LowerUpperBound(size, 0, 1)
+        self.node = LowerUpperBound(size=size, lower_bound=0.0, upper_bound=0.0, name=name)
+        name = self.node.backing.name
+        self.alpha = wrap_if_constant(alpha, name=f'{name}_alpha')
+        self.beta = wrap_if_constant(beta, name=f'{name}_beta')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)

@@ -1,16 +1,20 @@
 import torch
 import torch.nn.functional as F
 
-from torchvi.vtensor.unconstrained import Unconstrained
+from torchvi.vtensor.backing import Backing
+from torchvi.vmodule import VModule
 
 
-class Simplex(Unconstrained):
-    def __init__(self, size: int):
-        super().__init__(size - 1)
+class Simplex(VModule):
+    def __init__(self, size: int, name=None):
+        super().__init__()
+
         if not isinstance(size, int):
             raise TypeError(f'Simplex size must be an integer. Got: {type(size)}')
         if size <= 1:
             raise ValueError(f'Simplex size must be greater than 1. Got: {size}')
+
+        self.backing = Backing(size - 1, name)
         ar = torch.arange(1, size, dtype=torch.float64, requires_grad=False)
         grad_scale = size - ar
         self.register_buffer('grad_scale', grad_scale)
@@ -25,7 +29,7 @@ class Simplex(Unconstrained):
         return z, theta
 
     def forward(self, x):
-        zeta, constraint_contrib = super().forward(x)
+        zeta, constraint_contrib = self.backing.forward()
         z, theta = self.__simplex_transform(zeta)
 
         simplex_constraint_contrib = z.log() + self.grad_scale * (1 - z).log()
@@ -34,6 +38,9 @@ class Simplex(Unconstrained):
         return theta, constraint_contrib
 
     def sample(self, x, size):
-        zeta = super().sample(x, size)
+        zeta = self.backing.sample(size)
         _, theta = self.__simplex_transform(zeta)
         return theta
+
+    def extra_repr(self):
+        return f'name={self.backing.name} size={self.backing.size + 1}'

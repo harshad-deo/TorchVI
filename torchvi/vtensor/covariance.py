@@ -1,16 +1,21 @@
 import torch
 from torch import nn
+import uuid
 
 from torchvi.vmodule import VModule
 
 
 class Covariance(VModule):
-    def __init__(self, size: int):
+    def __init__(self, size: int, name=None):
         super().__init__()
         if not isinstance(size, int):
             raise TypeError(f'size must be an integer. Got: {type(size)}')
         if size <= 1:
             raise ValueError(f'size must be greater than 1. Got: {size}')
+
+        if name is None:
+            name = uuid.uuid4().hex
+        self.__name = name
 
         self.size = size
         self.tril_size = (size * (size - 1)) // 2
@@ -28,6 +33,10 @@ class Covariance(VModule):
 
         self.tril_mu = nn.Parameter(torch.Tensor(self.tril_size), requires_grad=True)
         self.tril_omega = nn.Parameter(torch.Tensor(self.tril_size), requires_grad=True)
+
+    @property
+    def name(self):
+        return self.__name
 
     def forward(self, x):
         device = self.diag_mu.device
@@ -71,4 +80,4 @@ class Covariance(VModule):
         return theta
 
     def extra_repr(self):
-        return f'size={self.size}'
+        return f'name={self.name} size={self.size}'

@@ -8,15 +8,15 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class Dirichlet(VModule):
-    def __init__(self, alpha):
+    def __init__(self, alpha, name=None):
         super().__init__()
         if isinstance(alpha, Iterable):
             self.size = len(alpha)
         else:
             raise TypeError(f'alpha must be an iterable. Got: {type(alpha)}')
         self.size = len(alpha)
-        self.alpha = wrap_if_constant(alpha)
-        self.node = Simplex(size=self.size)
+        self.node = Simplex(size=self.size, name=name)
+        self.alpha = wrap_if_constant(alpha, name=f'{self.node.backing.name}_alpha')
 
     def forward(self, x):
         theta, constraint_contrib = self.node.forward(x)

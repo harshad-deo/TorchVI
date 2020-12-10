@@ -6,11 +6,11 @@ from torchvi.vtensor.lowerbound import LowerBound
 
 
 class Exponential(VModule):
-    def __init__(self, size, rate):
+    def __init__(self, size, rate, name=None):
         super().__init__()
         self.size = size
-        self.rate = wrap_if_constant(rate)
-        self.node = LowerBound(size, 0.0)
+        self.node = LowerBound(size=size, lower_bound=0.0, name=name)
+        self.rate = wrap_if_constant(rate, name=f'{self.node.backing.name}_rate')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)

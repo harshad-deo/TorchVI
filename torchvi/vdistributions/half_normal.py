@@ -6,11 +6,11 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class HalfNormal(VModule):
-    def __init__(self, size, scale):
+    def __init__(self, size, scale, name=None):
         super().__init__()
         self.size = size
-        self.scale = wrap_if_constant(scale)
-        self.node = LowerBound(size, 0)
+        self.node = LowerBound(size=size, lower_bound=0.0, name=name)
+        self.scale = wrap_if_constant(scale, name=f'{self.node.backing.name}_scale')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)

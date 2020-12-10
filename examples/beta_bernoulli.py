@@ -74,8 +74,8 @@ if __name__ == "__main__":
     beta = beta_0 + num_samples - sample_success
     samples_expected = np.random.beta(a=alpha, b=beta, size=num_samples * 10)
 
-    ax2.hist(samples_actual, label='actual', alpha=0.5)
-    ax2.hist(samples_expected, label='expected', alpha=0.5)
+    ax2.hist(samples_actual, label='actual', alpha=0.5, density=True)
+    ax2.hist(samples_expected, label='expected', alpha=0.5, density=True)
     ax2.set_ylabel('$p(\\theta$)')
     ax2.set_xlabel('$\\theta$')
     ax2.legend()
