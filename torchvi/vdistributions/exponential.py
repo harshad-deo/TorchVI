@@ -3,6 +3,7 @@ from torch import distributions
 from torchvi.vmodule import VModule
 from torchvi.vdistributions.constant import wrap_if_constant
 from torchvi.vtensor.lowerbound import LowerBound
+from torchvi.vtensor.constraint import Constraint
 
 
 class Exponential(VModule):
@@ -18,8 +19,9 @@ class Exponential(VModule):
         rate, rate_constraint = self.rate.forward(x)
         constraint_contrib += rate_constraint
 
+        name = self.node.backing.name
         prior = distributions.Exponential(rate)
-        constraint_contrib += prior.log_prob(zeta).sum()
+        constraint_contrib += Constraint.new(f'{name}_prior', prior.log_prob(zeta).sum())
 
         return zeta, constraint_contrib
 

@@ -3,6 +3,7 @@ from typing import Iterable
 import torch
 
 from torchvi.vmodule import VModule
+from torchvi.vtensor.constraint import Constraint
 
 
 class Constant(VModule):
@@ -13,7 +14,7 @@ class Constant(VModule):
         self.register_buffer('constraint_contrib', torch.squeeze(torch.zeros(1)))
 
     def forward(self, x):
-        return self.value, self.constraint_contrib
+        return self.value, Constraint.new(self.name, self.constraint_contrib)
 
     def sample(self, x, size):
         return self.value.repeat(size)

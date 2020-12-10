@@ -24,7 +24,7 @@ class StandardRegression(nn.Module):
         data_lp = dist.log_prob(ys).sum()
         constraint_contrib = theta_0_contrib + theta_1_contrib + theta_2_contrib
 
-        return data_lp + constraint_contrib
+        return constraint_contrib.add_tensor(data_lp)
 
     def sample(self, xs, size):
         theta_0 = self.theta_0.sample(None, size)
@@ -58,7 +58,7 @@ class RobustRegression(nn.Module):
         data_lp = dist.log_prob(ys).sum()
         constraint_contrib = theta_0_contrib + theta_1_contrib + theta_2_contrib + theta_3_contrib
 
-        return data_lp + constraint_contrib
+        return constraint_contrib.add_tensor(data_lp)
 
     def sample(self, xs, size):
         theta_0 = self.theta_0.sample(None, size)

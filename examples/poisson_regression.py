@@ -21,9 +21,9 @@ class Model(nn.Module):
 
         log_rate = intercept + slope * xs_math
         dist = distributions.Poisson(rate=log_rate.exp())
-        lp = dist.log_prob(ys)
-
-        return lp.sum() + theta_0_contrib + theta_1_contrib
+        data_lp = dist.log_prob(ys)
+        constraint_contrib = theta_0_contrib + theta_1_contrib
+        return constraint_contrib.add_tensor(data_lp.sum())
 
     def sample(self, size):
         theta_0 = self.theta_0.sample(None, size).cpu()

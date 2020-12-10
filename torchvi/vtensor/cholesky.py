@@ -53,7 +53,7 @@ class Cholesky(VModule):
         return chol
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__name
 
     def extra_repr(self):

@@ -14,9 +14,9 @@ class Model(nn.Module):
     def forward(self, xs):
         theta, constraint_contrib = self.theta(None)
         dist = distributions.Bernoulli(probs=theta)
-        lp = dist.log_prob(xs).sum()
+        data_lp = dist.log_prob(xs).sum()
 
-        return lp + constraint_contrib
+        return constraint_contrib.add_tensor(data_lp)
 
     def sample(self, size):
         return torch.squeeze(self.theta.sample(None, size))

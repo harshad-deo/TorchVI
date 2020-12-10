@@ -3,6 +3,7 @@ import torch
 from torchvi.vmodule import VModule
 from torchvi.vtensor import utils
 from torchvi.vtensor.backing import Backing
+from torchvi.vtensor.constraint import Constraint
 
 
 class LowerUpperBound(VModule):
@@ -18,7 +19,7 @@ class LowerUpperBound(VModule):
         zeta, constraint_contrib = self.backing.forward()
 
         jac_contrib = zeta - 2 * (1 + (-zeta).exp()).log()
-        constraint_contrib += jac_contrib.sum()
+        constraint_contrib += Constraint.new(f'{self.backing.name}_lbub', jac_contrib.sum())
 
         return torch.sigmoid(zeta), constraint_contrib
 

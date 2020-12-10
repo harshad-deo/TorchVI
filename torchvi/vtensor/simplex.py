@@ -3,6 +3,7 @@ import torch.nn.functional as F
 
 from torchvi.vtensor.backing import Backing
 from torchvi.vmodule import VModule
+from torchvi.vtensor.constraint import Constraint
 
 
 class Simplex(VModule):
@@ -34,7 +35,7 @@ class Simplex(VModule):
 
         simplex_constraint_contrib = z.log() + self.grad_scale * (1 - z).log()
 
-        constraint_contrib += simplex_constraint_contrib.sum()
+        constraint_contrib += Constraint.new(f'{self.backing.name}_simplex', simplex_constraint_contrib.sum())
         return theta, constraint_contrib
 
     def sample(self, x, size):

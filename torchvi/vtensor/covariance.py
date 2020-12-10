@@ -3,6 +3,7 @@ from torch import nn
 import uuid
 
 from torchvi.vmodule import VModule
+from torchvi.vtensor.constraint import Constraint
 
 
 class Covariance(VModule):
@@ -35,7 +36,7 @@ class Covariance(VModule):
         self.tril_omega = nn.Parameter(torch.Tensor(self.tril_size), requires_grad=True)
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__name
 
     def forward(self, x):
@@ -53,6 +54,7 @@ class Covariance(VModule):
         theta = torch.matmul(chol, chol.t())
 
         constraint_contrib = self.diag_omega.sum() + self.tril_omega.sum() + self.diag_scale * zeta_diag
+        constraint_contrib = Constraint.new(self.name, constraint_contrib)
 
         return theta, constraint_contrib
 

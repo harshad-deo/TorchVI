@@ -2,6 +2,7 @@ import torch
 from torch import distributions
 
 from torchvi.vmodule import VModule
+from torchvi.vtensor.constraint import Constraint
 from torchvi.vtensor.unconstrained import Unconstrained
 from torchvi.vdistributions.constant import wrap_if_constant
 
@@ -21,7 +22,9 @@ class Laplace(VModule):
         scale, scale_constraint = self.scale.forward(x)
 
         prior = distributions.Laplace(loc=loc, scale=scale)
-        constraint_contrib += prior.log_prob(zeta).sum() + loc_constraint + scale_constraint
+        name = self.node.backing.name
+        constraint_contrib += Constraint.new(f'{name}_prior',
+                                             prior.log_prob(zeta).sum()) + loc_constraint + scale_constraint
 
         return zeta, constraint_contrib
 

@@ -3,7 +3,7 @@ from tqdm import tqdm
 import torch
 from torch import distributions, nn, optim
 
-from torchvi.vtensor import Cholesky, Unconstrained
+from torchvi.vtensor import Cholesky, Unconstrained, constraint
 
 
 class Model(nn.Module):
@@ -16,9 +16,9 @@ class Model(nn.Module):
         mu, mu_contrib = self.mu.forward(None)
         chol, chol_contrib = self.chol.forward(None)
         dist = distributions.MultivariateNormal(loc=mu, scale_tril=chol.double())
-        lp = dist.log_prob(xs).sum()
-
-        return lp + mu_contrib + chol_contrib
+        data_lp = dist.log_prob(xs).sum()
+        constraint_contrib = mu_contrib + chol_contrib
+        return constraint_contrib.add_tensor(data_lp)
 
     def sample(self, size):
         mu_sample = self.mu.sample(None, size).squeeze()

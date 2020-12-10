@@ -3,6 +3,7 @@ import torch
 from torchvi.vmodule import VModule
 from torchvi.vtensor import utils
 from torchvi.vtensor.backing import Backing
+from torchvi.vtensor.constraint import Constraint
 
 
 class LowerBound(VModule):
@@ -14,7 +15,7 @@ class LowerBound(VModule):
 
     def forward(self, x):
         zeta, constraint_contrib = self.backing.forward()
-        constraint_contrib += zeta.sum()
+        constraint_contrib += Constraint.new(f'{self.backing.name}_lb', zeta.sum())
 
         return self.lower_bound + zeta.exp(), constraint_contrib
 

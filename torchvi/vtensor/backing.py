@@ -4,6 +4,7 @@ import uuid
 
 from torchvi.vmodule import VModule
 from torchvi.vtensor import utils
+from torchvi.vtensor.constraint import Constraint
 
 
 class Backing(VModule):
@@ -24,7 +25,7 @@ class Backing(VModule):
 
         eta = torch.randn(self.size, device=device)
         zeta = self.mu + eta * self.omega.exp()
-        constraint_contrib = torch.squeeze(self.omega.sum())
+        constraint_contrib = Constraint.new(self.name, self.omega.sum())
         return zeta, constraint_contrib
 
     def sample(self, size):
@@ -37,7 +38,7 @@ class Backing(VModule):
         return mu + eta * omega.exp()
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__name
 
     def extra_repr(self):

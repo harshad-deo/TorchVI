@@ -1,8 +1,8 @@
-import torch
 from torch import distributions
 
 from torchvi.vmodule import VModule
 from torchvi.vtensor.lowerupperbound import LowerUpperBound
+from torchvi.vtensor.constraint import Constraint
 from torchvi.vdistributions.constant import wrap_if_constant
 
 
@@ -23,7 +23,8 @@ class Beta(VModule):
         constraint_contrib += alpha_constraint + beta_constraint
 
         prior = distributions.Beta(alpha, beta)
-        constraint_contrib += prior.log_prob(zeta).sum()
+        name = self.node.backing.name
+        constraint_contrib += Constraint.new(f'{name}_prior', prior.log_prob(zeta).sum())
 
         return zeta, constraint_contrib
 

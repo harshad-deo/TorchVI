@@ -16,9 +16,8 @@ class Model(nn.Module):
     def forward(self, xs):
         mu, constraint_contrib = self.mu(None)
         dist = distributions.Normal(mu, self.scale_known)
-        lp = dist.log_prob(xs).sum()
-
-        return lp + constraint_contrib
+        data_lp = dist.log_prob(xs).sum()
+        return constraint_contrib.add_tensor(data_lp)
 
     def sample(self, size):
         return torch.squeeze(self.mu.sample(None, size))

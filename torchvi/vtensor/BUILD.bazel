@@ -5,8 +5,9 @@ py_library(
     name = "vtensor",
     srcs = [
         "__init__.py",
-        'backing.py',
+        "backing.py",
         "cholesky.py",
+        "constraint.py",
         "covariance.py",
         "lowerbound.py",
         "lowerupperbound.py",

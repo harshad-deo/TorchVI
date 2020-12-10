@@ -15,7 +15,7 @@ class Model(nn.Module):
         theta, theta_contrib = self.theta(None)
         dist = distributions.Categorical(probs=theta)
         lp = dist.log_prob(xs).sum()
-        return lp + theta_contrib
+        return theta_contrib.add_tensor(lp)
 
     def sample(self, size):
         return torch.squeeze(self.theta.sample(None, size))

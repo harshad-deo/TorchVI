@@ -2,6 +2,7 @@ from torch import distributions
 
 from torchvi.vmodule import VModule
 from torchvi.vtensor.lowerbound import LowerBound
+from torchvi.vtensor.constraint import Constraint
 from torchvi.vdistributions.constant import wrap_if_constant
 
 
@@ -19,7 +20,8 @@ class HalfNormal(VModule):
         constraint_contrib += scale_constraint
 
         prior = distributions.HalfNormal(scale)
-        constraint_contrib += prior.log_prob(zeta).sum()
+        name = self.node.backing.name
+        constraint_contrib += Constraint.new(f'{name}_prior', prior.log_prob(zeta).sum())
 
         return zeta, constraint_contrib
 

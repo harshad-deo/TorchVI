@@ -3,6 +3,7 @@ from torchvi.vdistributions.constant import wrap_if_constant
 from torch import distributions
 
 from torchvi.vmodule import VModule
+from torchvi.vtensor.constraint import Constraint
 from torchvi.vtensor.simplex import Simplex
 from torchvi.vdistributions.constant import wrap_if_constant
 
@@ -23,7 +24,8 @@ class Dirichlet(VModule):
         alpha, alpha_constraint = self.alpha.forward(x)
 
         prior = distributions.Dirichlet(alpha)
-        constraint_contrib += alpha_constraint + prior.log_prob(theta).sum()
+        name = self.node.backing.name
+        constraint_contrib += alpha_constraint + Constraint.new(f'{name}_prior', prior.log_prob(theta).sum())
 
         return theta, constraint_contrib
 
