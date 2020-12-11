@@ -79,6 +79,7 @@ if __name__ == "__main__":
 
     num_epochs = 5000
     model, losses, samples = fit(0.0, 1.0, 1.0, xs, ys, num_epochs)
+    print(model)
 
     fig, axs = plt.subplots(2, 2)
 

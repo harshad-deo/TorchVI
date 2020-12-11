@@ -1,3 +1,4 @@
+import torch
 from torch import distributions
 
 from torchvi.core.vmodule import VModule
@@ -7,11 +8,10 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class HalfNormal(VModule):
-    def __init__(self, size, scale, name=None):
-        super().__init__()
-        self.size = size
-        self.node = LowerBound(size=size, lower_bound=0.0, name=name)
-        self.scale = wrap_if_constant(scale, name=f'{self.node.backing.name}_scale')
+    def __init__(self, size, scale, name: str = None):
+        super().__init__(name=name)
+        self.node = LowerBound(size=size, lower_bound=0.0, name=f'{self.name}_node')
+        self.scale = wrap_if_constant(scale, name=f'{self.name}_scale')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)
@@ -20,13 +20,12 @@ class HalfNormal(VModule):
         constraint_contrib += scale_constraint
 
         prior = distributions.HalfNormal(scale)
-        name = self.node.backing.name
-        constraint_contrib += Constraint.new(f'{name}_prior', prior.log_prob(zeta).sum())
+        constraint_contrib += Constraint.new(f'{self.name}_prior', prior.log_prob(zeta).sum())
 
         return zeta, constraint_contrib
 
-    def sample(self, x, size):
+    def sample(self, x, size) -> torch.Tensor:
         return self.node.sample(x, size)
 
-    def extra_repr(self):
-        return f'size={self.size}, loc={self.loc}, scale={self.scale}'
+    def extra_repr(self) -> str:
+        return f'name={self.name}'

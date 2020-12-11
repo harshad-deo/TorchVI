@@ -66,6 +66,7 @@ if __name__ == "__main__":
     num_epochs = 20000
 
     model, losses, samples = fit(2, xs, num_epochs, num_samples)
+    print(model)
 
     fig, axs = plt.subplots(2, 3)
 

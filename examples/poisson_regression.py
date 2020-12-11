@@ -99,6 +99,7 @@ if __name__ == "__main__":
                                  ys=ys,
                                  num_epochs=num_epochs,
                                  num_samples=num_samples)
+    print(model)
 
     plt.plot(losses)
     plt.show()

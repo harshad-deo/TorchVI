@@ -8,14 +8,15 @@ from torchvi.vtensor.constraint import Constraint
 
 class Simplex(VModule):
     def __init__(self, size: int, name=None):
-        super().__init__()
+        super().__init__(name=name)
 
         if not isinstance(size, int):
             raise TypeError(f'Simplex size must be an integer. Got: {type(size)}')
         if size <= 1:
             raise ValueError(f'Simplex size must be greater than 1. Got: {size}')
 
-        self.backing = Backing(size - 1, name)
+        self.size = size
+        self.backing = Backing(size - 1, f'{self.name}_backing')
         ar = torch.arange(1, size, dtype=torch.float64, requires_grad=False)
         grad_scale = size - ar
         self.register_buffer('grad_scale', grad_scale)
@@ -38,10 +39,10 @@ class Simplex(VModule):
         constraint_contrib += Constraint.new(f'{self.backing.name}_simplex', simplex_constraint_contrib.sum())
         return theta, constraint_contrib
 
-    def sample(self, x, size):
+    def sample(self, x, size) -> torch.Tensor:
         zeta = self.backing.sample(size)
         _, theta = self.__simplex_transform(zeta)
         return theta
 
-    def extra_repr(self):
-        return f'name={self.backing.name} size={self.backing.size + 1}'
+    def extra_repr(self) -> str:
+        return f'name={self.name}, size={self.size}'

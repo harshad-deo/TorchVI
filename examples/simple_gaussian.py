@@ -62,6 +62,7 @@ if __name__ == "__main__":
 
     num_epochs = 200
     model, losses, actual_samples = fit(sigma_known, xs, num_epochs, num_samples)
+    print(model)
 
     fig, (ax1, ax2) = plt.subplots(2, 1)
 

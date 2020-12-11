@@ -1,30 +1,25 @@
 from collections.abc import Iterable
-from typing import Iterable
 import torch
+from typing import Iterable
 
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor.constraint import Constraint
 
 
 class Constant(VModule):
-    def __init__(self, value, name):
-        super().__init__()
-        self.__name = name
+    def __init__(self, value: torch.Tensor, name: str):
+        super().__init__(name=name)
         self.register_buffer('value', value)
         self.register_buffer('constraint_contrib', torch.squeeze(torch.zeros(1)))
 
     def forward(self, x):
         return self.value, Constraint.new(self.name, self.constraint_contrib)
 
-    def sample(self, x, size):
+    def sample(self, x, size) -> torch.Tensor:
         return self.value.repeat(size)
 
-    def extra_repr(self):
-        return f'name={self.__name} size={self.size}, alpha={self.alpha}, beta={self.beta}'
-
-    @property
-    def name(self):
-        return self.__name
+    def extra_repr(self) -> str:
+        return f'name={self.name}, value={self.value}'
 
 
 def wrap_if_constant(x, name: str):

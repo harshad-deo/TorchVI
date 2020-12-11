@@ -1,3 +1,4 @@
+import torch
 from torch import distributions
 
 from torchvi.core.vmodule import VModule
@@ -8,12 +9,10 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 class Beta(VModule):
     def __init__(self, size, alpha, beta, name=None):
-        super().__init__()
-        self.size = size
-        self.node = LowerUpperBound(size=size, lower_bound=0.0, upper_bound=0.0, name=name)
-        name = self.node.backing.name
-        self.alpha = wrap_if_constant(alpha, name=f'{name}_alpha')
-        self.beta = wrap_if_constant(beta, name=f'{name}_beta')
+        super().__init__(name=name)
+        self.node = LowerUpperBound(size=size, lower_bound=0.0, upper_bound=0.0, name=f'{self.name}_node')
+        self.alpha = wrap_if_constant(alpha, name=f'{self.name}_alpha')
+        self.beta = wrap_if_constant(beta, name=f'{self.name}_beta')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)
@@ -28,8 +27,8 @@ class Beta(VModule):
 
         return zeta, constraint_contrib
 
-    def sample(self, x, size):
+    def sample(self, x, size) -> torch.Tensor:
         return self.node.sample(x, size)
 
-    def extra_repr(self):
-        return f'size={self.size}, alpha={self.alpha}, beta={self.beta}'
+    def extra_repr(self) -> str:
+        return f'name={self.name}'

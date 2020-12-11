@@ -8,12 +8,11 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class Laplace(VModule):
-    def __init__(self, size, loc, scale, name=None):
-        super().__init__()
-        self.size = size
-        self.node = Unconstrained(size)
-        self.loc = wrap_if_constant(loc, name=f'{self.node.backing.name}_loc')
-        self.scale = wrap_if_constant(scale, name=f'{self.node.backing.name}_scale')
+    def __init__(self, size, loc, scale, name: str = None):
+        super().__init__(name)
+        self.node = Unconstrained(size=size, name=f'{self.name}_node')
+        self.loc = wrap_if_constant(loc, name=f'{self.name}_loc')
+        self.scale = wrap_if_constant(scale, name=f'{self.name}_scale')
 
     def forward(self, x):
         zeta, constraint_contrib = self.node.forward(x)
@@ -22,14 +21,13 @@ class Laplace(VModule):
         scale, scale_constraint = self.scale.forward(x)
 
         prior = distributions.Laplace(loc=loc, scale=scale)
-        name = self.node.backing.name
-        constraint_contrib += Constraint.new(f'{name}_prior',
+        constraint_contrib += Constraint.new(f'{self.name}_prior',
                                              prior.log_prob(zeta).sum()) + loc_constraint + scale_constraint
 
         return zeta, constraint_contrib
 
-    def sample(self, x, size):
+    def sample(self, x, size) -> torch.Tensor:
         return self.node.sample(x, size)
 
-    def extra_repr(self):
-        return f'size={self.size}, loc={self.loc}, scale={self.scale}'
+    def extra_repr(self) -> str:
+        return f'name={self.name}'

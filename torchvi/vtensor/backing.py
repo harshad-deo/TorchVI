@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-import uuid
 
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor import utils
@@ -8,11 +7,8 @@ from torchvi.vtensor.constraint import Constraint
 
 
 class Backing(VModule):
-    def __init__(self, size, name=None):
-        super().__init__()
-        if name is None:
-            name = uuid.uuid4().hex
-        self.__name = name
+    def __init__(self, size, name: str):
+        super().__init__(name=name)
         self.size = utils.to_size(size)
         self.mu = nn.Parameter(torch.Tensor(self.size), requires_grad=True)
         self.omega = nn.Parameter(torch.Tensor(self.size), requires_grad=True)
@@ -28,7 +24,7 @@ class Backing(VModule):
         constraint_contrib = Constraint.new(self.name, self.omega.sum())
         return zeta, constraint_contrib
 
-    def sample(self, size):
+    def sample(self, size) -> torch.Tensor:
         device = self.mu.device
 
         sample_size = [size] + list(self.size)
@@ -37,9 +33,5 @@ class Backing(VModule):
         omega = self.omega.detach().unsqueeze(0)
         return mu + eta * omega.exp()
 
-    @property
-    def name(self) -> str:
-        return self.__name
-
-    def extra_repr(self):
-        return f'name={self.__name} size={self.size}'
+    def extra_repr(self) -> str:
+        return f'name={self.name}, size={self.size}'

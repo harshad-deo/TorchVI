@@ -120,9 +120,13 @@ if __name__ == "__main__":
 
     standard_model = StandardRegression(0.0, 1.0, 1.0)
     standard_model, standard_loss, standard_samples = fit('standard', standard_model, 7e-2, xs, ys, num_epochs)
+    print('--------- standard model ---------')
+    print(standard_model)
 
     lasso_model = LassoRegression(0.0, 1.0, 1.0)
     lasso_model, lasso_loss, lasso_samples = fit('lasso', lasso_model, 7e-2, xs, ys, num_epochs)
+    print('--------- lasso model ---------')
+    print(lasso_model)
 
     ys_standard = standard_samples['ys']
     ys_standard_quantiles = np.quantile(ys_standard, [0.025, 0.5, 0.975], axis=0)

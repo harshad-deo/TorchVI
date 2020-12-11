@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from torchvi.vdistributions.constant import wrap_if_constant
+import torch
 from torch import distributions
 
 from torchvi.core.vmodule import VModule
@@ -10,14 +10,14 @@ from torchvi.vdistributions.constant import wrap_if_constant
 
 class Dirichlet(VModule):
     def __init__(self, alpha, name=None):
-        super().__init__()
+        super().__init__(name)
         if isinstance(alpha, Iterable):
             self.size = len(alpha)
         else:
             raise TypeError(f'alpha must be an iterable. Got: {type(alpha)}')
         self.size = len(alpha)
-        self.node = Simplex(size=self.size, name=name)
-        self.alpha = wrap_if_constant(alpha, name=f'{self.node.backing.name}_alpha')
+        self.node = Simplex(size=self.size, name=f'{self.name}_node')
+        self.alpha = wrap_if_constant(alpha, name=f'{self.name}_alpha')
 
     def forward(self, x):
         theta, constraint_contrib = self.node.forward(x)
@@ -29,8 +29,8 @@ class Dirichlet(VModule):
 
         return theta, constraint_contrib
 
-    def sample(self, x, size):
+    def sample(self, x, size) -> torch.Tensor:
         return self.node.sample(x, size)
 
-    def extra_repr(self):
-        return f'size={self.size}'
+    def extra_repr(self) -> str:
+        return f'name={self.name} size={self.size}'
