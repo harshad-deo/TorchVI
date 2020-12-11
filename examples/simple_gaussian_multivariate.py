@@ -3,7 +3,7 @@ from tqdm import tqdm
 import torch
 from torch import distributions, nn, optim
 
-from torchvi.vtensor import Cholesky, Unconstrained, constraint
+from torchvi.vtensor import Cholesky, Unconstrained
 
 
 class Model(nn.Module):

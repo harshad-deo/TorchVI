@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
+from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor import utils
-from torchvi.vtensor.constraint import Constraint
 
 
 class Backing(VModule):

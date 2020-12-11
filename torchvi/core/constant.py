@@ -2,8 +2,8 @@ from collections.abc import Iterable
 import torch
 from typing import Iterable
 
+from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
-from torchvi.vtensor.constraint import Constraint
 
 
 class Constant(VModule):

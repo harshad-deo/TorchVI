@@ -5,6 +5,7 @@ py_library(
     name = "core",
     srcs = [
         "constant.py",
+        "constraint.py",
         "vmodule.py",
     ],
     visibility = ["//visibility:public"],

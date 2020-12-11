@@ -7,7 +7,6 @@ py_library(
         "__init__.py",
         "backing.py",
         "cholesky.py",
-        "constraint.py",
         "covariance.py",
         "lowerbound.py",
         "lowerupperbound.py",

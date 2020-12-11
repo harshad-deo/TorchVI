@@ -1,9 +1,9 @@
 import torch
 
+from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor import utils
 from torchvi.vtensor.backing import Backing
-from torchvi.vtensor.constraint import Constraint
 
 
 class LowerUpperBound(VModule):

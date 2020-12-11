@@ -1,9 +1,9 @@
 import torch
 import torch.nn.functional as F
 
+from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor.backing import Backing
-from torchvi.vtensor.constraint import Constraint
 
 
 class Simplex(VModule):

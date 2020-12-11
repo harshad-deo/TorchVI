@@ -2,9 +2,9 @@ import torch
 from torch import distributions
 
 from torchvi.core.constant import wrap_if_constant
+from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor.lowerbound import LowerBound
-from torchvi.vtensor.constraint import Constraint
 
 
 class HalfNormal(VModule):

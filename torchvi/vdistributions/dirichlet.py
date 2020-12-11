@@ -3,8 +3,8 @@ import torch
 from torch import distributions
 
 from torchvi.core.constant import wrap_if_constant
+from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
-from torchvi.vtensor.constraint import Constraint
 from torchvi.vtensor.simplex import Simplex
 
 
