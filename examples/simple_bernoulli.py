@@ -9,7 +9,7 @@ from torchvi import vtensor
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.theta = vtensor.LowerUpperBound(size=1, lower_bound=0, upper_bound=1)
+        self.theta = vtensor.LowerUpperBound(size=1, lower_bound=0, upper_bound=1, name='theta')
 
     def forward(self, xs):
         theta, constraint_contrib = self.theta(None)

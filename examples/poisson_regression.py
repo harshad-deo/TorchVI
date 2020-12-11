@@ -10,8 +10,8 @@ from torchvi.vdistributions import Normal
 class Model(nn.Module):
     def __init__(self, size, loc, scale):
         super().__init__()
-        self.theta_0 = Normal(size=size, loc=loc, scale=scale)
-        self.theta_1 = Normal(size=size, loc=loc, scale=scale)
+        self.theta_0 = Normal(size=size, loc=loc, scale=scale, name='theta_0')
+        self.theta_1 = Normal(size=size, loc=loc, scale=scale, name='theta_1')
 
     def forward(self, xs, xs_math, ys):
         theta_0, theta_0_contrib = self.theta_0.forward(None)

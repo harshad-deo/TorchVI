@@ -9,7 +9,7 @@ from torchvi.vtensor.simplex import Simplex
 
 
 class Dirichlet(VModule):
-    def __init__(self, alpha, name=None):
+    def __init__(self, alpha, name: str):
         super().__init__(name)
         if isinstance(alpha, Iterable):
             self.size = len(alpha)

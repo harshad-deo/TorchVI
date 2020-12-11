@@ -6,7 +6,7 @@ from torchvi.vtensor.lowerbound import LowerBound
 
 
 class Cholesky(VModule):
-    def __init__(self, size: int, name: str = None):
+    def __init__(self, size: int, name: str):
         super().__init__(name=name)
 
         if not isinstance(size, int):

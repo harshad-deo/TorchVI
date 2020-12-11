@@ -9,7 +9,7 @@ from torchvi.vdistributions import Dirichlet
 class Model(nn.Module):
     def __init__(self, alpha):
         super().__init__()
-        self.theta = Dirichlet(alpha=alpha)
+        self.theta = Dirichlet(alpha=alpha, name='theta')
 
     def forward(self, xs):
         theta, theta_contrib = self.theta(None)

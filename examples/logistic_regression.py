@@ -9,8 +9,8 @@ from torchvi.vdistributions import Normal
 class Model(nn.Module):
     def __init__(self, prior_mu, prior_sd):
         super().__init__()
-        self.theta_0 = Normal(1, prior_mu, prior_sd)
-        self.theta_1 = Normal(1, prior_mu, prior_sd)
+        self.theta_0 = Normal(1, prior_mu, prior_sd, name='theta_0')
+        self.theta_1 = Normal(1, prior_mu, prior_sd, name='theta_1')
 
     def forward(self, xs, ys):
         theta_0, theta_0_contrib = self.theta_0(None)

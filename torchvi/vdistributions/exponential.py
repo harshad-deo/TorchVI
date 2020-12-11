@@ -8,7 +8,7 @@ from torchvi.vtensor.lowerbound import LowerBound
 
 
 class Exponential(VModule):
-    def __init__(self, size, rate, name=None):
+    def __init__(self, size, rate, name: str):
         super().__init__(name=name)
         self.node = LowerBound(size=size, lower_bound=0.0, name=f'{self.name}_node')
         self.rate = wrap_if_constant(rate, name=f'{self.name}_rate')

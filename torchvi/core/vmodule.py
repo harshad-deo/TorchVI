@@ -1,14 +1,11 @@
 from abc import ABC, abstractmethod
 import torch
 from torch import nn
-import uuid
 
 
 class VModule(nn.Module, ABC):
-    def __init__(self, name: str = None):
+    def __init__(self, name: str):
         super().__init__()
-        if name is None:
-            name = uuid.uuid4().hex
         self.__name = name
 
     @abstractmethod

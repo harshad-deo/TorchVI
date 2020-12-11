@@ -4,13 +4,13 @@ import torch
 from torch import nn, distributions, optim
 from tqdm import tqdm
 
-from torchvi import vtensor
+from torchvi.vtensor import Unconstrained
 
 
 class Model(nn.Module):
     def __init__(self, scale_known):
         super().__init__()
-        self.mu = vtensor.Unconstrained(1)
+        self.mu = Unconstrained(1, name='mu')
         self.scale_known = scale_known
 
     def forward(self, xs):

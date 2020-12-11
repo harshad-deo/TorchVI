@@ -9,7 +9,7 @@ from torchvi import vdistributions
 class Model(nn.Module):
     def __init__(self, alpha, beta):
         super().__init__()
-        self.theta = vdistributions.Beta(1, alpha, beta)
+        self.theta = vdistributions.Beta(1, alpha, beta, name='theta')
 
     def forward(self, xs):
         theta, constraint_contrib = self.theta(None)

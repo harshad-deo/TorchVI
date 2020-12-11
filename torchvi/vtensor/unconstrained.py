@@ -5,7 +5,7 @@ from torchvi.vtensor.backing import Backing
 
 
 class Unconstrained(VModule):
-    def __init__(self, size, name=None):
+    def __init__(self, size, name: str):
         super().__init__(name=name)
         self.backing = Backing(size, f'{self.name}_backing')
 

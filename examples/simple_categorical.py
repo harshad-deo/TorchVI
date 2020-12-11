@@ -9,7 +9,7 @@ from torchvi.vtensor import Simplex
 class Model(nn.Module):
     def __init__(self, size: int):
         super().__init__()
-        self.theta = Simplex(size)
+        self.theta = Simplex(size, name='theta')
 
     def forward(self, xs):
         theta, theta_contrib = self.theta(None)

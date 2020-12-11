@@ -9,8 +9,8 @@ from torchvi.vtensor import Cholesky, Unconstrained
 class Model(nn.Module):
     def __init__(self, size):
         super().__init__()
-        self.mu = Unconstrained(size)
-        self.chol = Cholesky(size)
+        self.mu = Unconstrained(size, name='mu')
+        self.chol = Cholesky(size, name='chol')
 
     def forward(self, xs):
         mu, mu_contrib = self.mu.forward(None)

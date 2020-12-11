@@ -7,7 +7,7 @@ from torchvi.vtensor.backing import Backing
 
 
 class LowerBound(VModule):
-    def __init__(self, size, lower_bound, name: str = None):
+    def __init__(self, size, lower_bound, name: str):
         super().__init__(name)
         self.backing = Backing(size=size, name=f'{self.name}_backing')
         utils.check_numeric(lower_bound, 'lower_bound')

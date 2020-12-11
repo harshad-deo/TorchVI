@@ -8,7 +8,7 @@ from torchvi.vtensor.unconstrained import Unconstrained
 
 
 class Laplace(VModule):
-    def __init__(self, size, loc, scale, name: str = None):
+    def __init__(self, size, loc, scale, name: str):
         super().__init__(name)
         self.node = Unconstrained(size=size, name=f'{self.name}_node')
         self.loc = wrap_if_constant(loc, name=f'{self.name}_loc')

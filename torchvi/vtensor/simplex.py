@@ -7,7 +7,7 @@ from torchvi.vtensor.backing import Backing
 
 
 class Simplex(VModule):
-    def __init__(self, size: int, name=None):
+    def __init__(self, size: int, name: str):
         super().__init__(name=name)
 
         if not isinstance(size, int):

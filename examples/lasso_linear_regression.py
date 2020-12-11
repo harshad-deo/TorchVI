@@ -9,9 +9,9 @@ from torchvi.vdistributions import Normal, HalfNormal, Laplace
 class StandardRegression(nn.Module):
     def __init__(self, reg_prior_mu, reg_prior_sd, noise_prior_scale):
         super().__init__()
-        self.theta_0 = Normal(1, reg_prior_mu, reg_prior_sd)
-        self.theta_1 = Normal(1, reg_prior_mu, reg_prior_sd)
-        self.theta_2 = HalfNormal(1, noise_prior_scale)
+        self.theta_0 = Normal(1, reg_prior_mu, reg_prior_sd, name='theta_0')
+        self.theta_1 = Normal(1, reg_prior_mu, reg_prior_sd, name='theta_1')
+        self.theta_2 = HalfNormal(1, noise_prior_scale, name='theta_2')
 
     def forward(self, xs, ys):
         theta_0, theta_0_contrib = self.theta_0(None)
@@ -41,9 +41,9 @@ class StandardRegression(nn.Module):
 class LassoRegression(nn.Module):
     def __init__(self, reg_prior_mu, reg_prior_sd, noise_prior_scale):
         super().__init__()
-        self.theta_0 = Laplace(1, reg_prior_mu, reg_prior_sd)
-        self.theta_1 = Laplace(1, reg_prior_mu, reg_prior_sd)
-        self.theta_2 = HalfNormal(1, noise_prior_scale)
+        self.theta_0 = Laplace(1, reg_prior_mu, reg_prior_sd, name='theta_0')
+        self.theta_1 = Laplace(1, reg_prior_mu, reg_prior_sd, name='theta_1')
+        self.theta_2 = HalfNormal(1, noise_prior_scale, name='theta_2')
 
     def forward(self, xs, ys):
         theta_0, theta_0_contrib = self.theta_0(None)

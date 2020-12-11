@@ -8,7 +8,7 @@ from torchvi.vtensor.lowerbound import LowerBound
 
 
 class HalfNormal(VModule):
-    def __init__(self, size, scale, name: str = None):
+    def __init__(self, size, scale, name: str):
         super().__init__(name=name)
         self.node = LowerBound(size=size, lower_bound=0.0, name=f'{self.name}_node')
         self.scale = wrap_if_constant(scale, name=f'{self.name}_scale')

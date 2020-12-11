@@ -8,7 +8,7 @@ from torchvi.vtensor.lowerupperbound import LowerUpperBound
 
 
 class Beta(VModule):
-    def __init__(self, size, alpha, beta, name=None):
+    def __init__(self, size, alpha, beta, name: str):
         super().__init__(name=name)
         self.node = LowerUpperBound(size=size, lower_bound=0.0, upper_bound=0.0, name=f'{self.name}_node')
         self.alpha = wrap_if_constant(alpha, name=f'{self.name}_alpha')
