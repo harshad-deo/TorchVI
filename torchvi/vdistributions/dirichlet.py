@@ -2,10 +2,10 @@ from collections.abc import Iterable
 import torch
 from torch import distributions
 
+from torchvi.core.constant import wrap_if_constant
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor.constraint import Constraint
 from torchvi.vtensor.simplex import Simplex
-from torchvi.vdistributions.constant import wrap_if_constant
 
 
 class Dirichlet(VModule):

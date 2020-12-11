@@ -6,7 +6,6 @@ py_library(
     srcs = [
         "__init__.py",
         "beta.py",
-        "constant.py",
         "dirichlet.py",
         "exponential.py",
         "half_normal.py",
