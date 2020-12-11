@@ -2,7 +2,7 @@ from collections.abc import Iterable
 from torchvi.vdistributions.constant import wrap_if_constant
 from torch import distributions
 
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.constraint import Constraint
 from torchvi.vtensor.simplex import Simplex
 from torchvi.vdistributions.constant import wrap_if_constant

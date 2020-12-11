@@ -1,7 +1,7 @@
 import torch
 import uuid
 
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.unconstrained import Unconstrained
 from torchvi.vtensor.lowerbound import LowerBound
 

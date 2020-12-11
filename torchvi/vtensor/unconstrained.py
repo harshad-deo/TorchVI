@@ -1,4 +1,4 @@
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.backing import Backing
 
 

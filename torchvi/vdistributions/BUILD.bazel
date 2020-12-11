@@ -15,7 +15,7 @@ py_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//torchvi",
+        "//torchvi/core",
         requirement("torch"),
         requirement("numpy"),
     ],

@@ -1,6 +1,6 @@
 from torch import distributions
 
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.lowerupperbound import LowerUpperBound
 from torchvi.vtensor.constraint import Constraint
 from torchvi.vdistributions.constant import wrap_if_constant

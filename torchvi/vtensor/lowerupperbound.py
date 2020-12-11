@@ -1,6 +1,6 @@
 import torch
 
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor import utils
 from torchvi.vtensor.backing import Backing
 from torchvi.vtensor.constraint import Constraint

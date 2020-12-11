@@ -2,7 +2,7 @@ from collections.abc import Iterable
 from typing import Iterable
 import torch
 
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.constraint import Constraint
 
 

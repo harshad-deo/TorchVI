@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import uuid
 
-from torchvi.vmodule import VModule
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.constraint import Constraint
 
 

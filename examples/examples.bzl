@@ -11,7 +11,7 @@ common_deps = [
     requirement("torch"),
     requirement("numpy"),
     requirement("tqdm"),
-    "//torchvi",
+    "//torchvi/core",
     "//torchvi/vtensor",
     "//torchvi/vdistributions",
     "//utils:fix_seed",

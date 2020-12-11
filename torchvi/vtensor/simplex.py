@@ -1,8 +1,8 @@
 import torch
 import torch.nn.functional as F
 
+from torchvi.core.vmodule import VModule
 from torchvi.vtensor.backing import Backing
-from torchvi.vmodule import VModule
 from torchvi.vtensor.constraint import Constraint
 
 

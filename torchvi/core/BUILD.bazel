@@ -2,22 +2,12 @@ load("//format:format.bzl", "format_py")
 load("@py_deps//:requirements.bzl", "requirement")
 
 py_library(
-    name = "vtensor",
+    name = "core",
     srcs = [
-        "__init__.py",
-        "backing.py",
-        "cholesky.py",
-        "constraint.py",
-        "covariance.py",
-        "lowerbound.py",
-        "lowerupperbound.py",
-        "simplex.py",
-        "unconstrained.py",
-        "utils.py",
+        "vmodule.py",
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//torchvi/core",
         requirement("torch"),
         requirement("numpy"),
     ],
