@@ -1,4 +1,3 @@
-import math
 import numpy as np
 import torch
 from torch import nn, distributions, optim
@@ -49,9 +48,13 @@ def fit(sigma_known, xs, num_epochs, num_samples):
 
 
 if __name__ == "__main__":
+    import logging
+    import math
     import matplotlib.pyplot as plt
     from utils.fix_seed import fix_seed
     fix_seed(42)
+    logging.basicConfig(format='%(asctime)s - [%(name)25s]:[%(lineno)4d]:[%(levelname)5s] - %(message)s',
+                        level=logging.INFO)
 
     num_samples = 100
 
@@ -62,7 +65,6 @@ if __name__ == "__main__":
 
     num_epochs = 200
     model, losses, actual_samples = fit(sigma_known, xs, num_epochs, num_samples)
-    print(model)
 
     fig, (ax1, ax2) = plt.subplots(2, 1)
 
@@ -70,7 +72,9 @@ if __name__ == "__main__":
     ax1.set_ylabel('Log Loss')
     ax1.set_xlabel('Epoch')
 
-    expected_samples = np.random.normal(loc=mu_known, scale=sigma_known / math.sqrt(num_samples), size=num_samples * 10)
+    expected_samples = np.random.normal(loc=actual_samples.mean(),
+                                        scale=sigma_known / math.sqrt(num_samples),
+                                        size=num_samples * 10)
 
     ax2.hist(actual_samples, label='actual', alpha=0.5, density=True)
     ax2.hist(expected_samples, label='expected', alpha=0.5, density=True)

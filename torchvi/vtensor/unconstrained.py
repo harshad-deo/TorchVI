@@ -1,5 +1,4 @@
-import torch
-
+from torchvi.core.ast import SingleNodeIdentity
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor.backing import Backing
 
@@ -7,13 +6,8 @@ from torchvi.vtensor.backing import Backing
 class Unconstrained(VModule):
     def __init__(self, size, name: str):
         super().__init__(name=name)
-        self.backing = Backing(size, f'{self.name}_backing')
-
-    def forward(self, x):
-        return self.backing.forward()
-
-    def sample(self, x, size) -> torch.Tensor:
-        return self.backing.sample(size)
-
-    def extra_repr(self) -> str:
-        return f'name={self.name}'
+        backing_name = f'{self.name}_backing'
+        self._module_dict[backing_name] = Backing(size=size, name=backing_name)
+        terminal_node = SingleNodeIdentity(name=self.name, arg=backing_name)
+        self._terminal_node = terminal_node
+        self._graph_dict[self.name] = terminal_node

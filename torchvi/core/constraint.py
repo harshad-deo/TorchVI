@@ -30,3 +30,6 @@ class Constraint:
         for value in self.__constraint_dict.values():
             that += value
         return that
+
+    def __repr__(self) -> str:
+        return f'{self.constraint_dict}'

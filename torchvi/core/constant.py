@@ -1,25 +1,38 @@
 from collections.abc import Iterable
 import torch
+from torch import nn
 from typing import Iterable
 
+from torchvi.core.ast import SingleNodeIdentity
 from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
+
+
+class ConstantImpl(nn.Module):
+    def __init__(self, value: torch.Tensor, name: str):
+        super().__init__()
+        self.name = name
+        self.register_buffer('value', value)
+        self.register_buffer('constraint_contrib', torch.squeeze(torch.zeros(1)))
+
+    def forward(self):
+        return self.value, Constraint.new(self.name, self.constraint_contrib)
+
+    def sample(self, size) -> torch.Tensor:
+        return self.value.repeat(size)
+
+    def extra_repr(self) -> str:
+        return f'name={self.name}, value={self.value}'
 
 
 class Constant(VModule):
     def __init__(self, value: torch.Tensor, name: str):
         super().__init__(name=name)
-        self.register_buffer('value', value)
-        self.register_buffer('constraint_contrib', torch.squeeze(torch.zeros(1)))
-
-    def forward(self, x):
-        return self.value, Constraint.new(self.name, self.constraint_contrib)
-
-    def sample(self, x, size) -> torch.Tensor:
-        return self.value.repeat(size)
-
-    def extra_repr(self) -> str:
-        return f'name={self.name}, value={self.value}'
+        backing_name = f'{name}_backing'
+        self._module_dict[backing_name] = ConstantImpl(value=value, name=backing_name)
+        terminal_node = SingleNodeIdentity(name=self.name, arg=backing_name)
+        self._terminal_node = terminal_node
+        self._graph_dict[self.name] = terminal_node
 
 
 def wrap_if_constant(x, name: str):

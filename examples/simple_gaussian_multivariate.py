@@ -52,9 +52,12 @@ def fit(size, xs, num_epochs, num_samples):
 
 
 if __name__ == "__main__":
+    import logging
     import matplotlib.pyplot as plt
     from utils.fix_seed import fix_seed
     fix_seed(42)
+    logging.basicConfig(format='%(asctime)s - [%(name)25s]:[%(lineno)4d]:[%(levelname)5s] - %(message)s',
+                        level=logging.INFO)
 
     loc = torch.tensor([-1, 2], dtype=torch.float64)
     scale_tril = torch.tensor([[1, 0], [-1, 2]], dtype=torch.float64)

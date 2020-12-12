@@ -73,9 +73,12 @@ def load_data():
 
 
 if __name__ == "__main__":
+    import logging
     import matplotlib.pyplot as plt
     from utils.fix_seed import fix_seed
     fix_seed(42)
+    logging.basicConfig(format='%(asctime)s - [%(name)25s]:[%(lineno)4d]:[%(levelname)5s] - %(message)s',
+                        level=logging.INFO)
 
     xs_prog, xs_math, ys = load_data()
     xs_stacked = [ys[xs_prog['prog_1'] == 1], ys[xs_prog['prog_2'] == 1], ys[xs_prog['prog_3'] == 1]]

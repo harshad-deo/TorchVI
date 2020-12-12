@@ -2,13 +2,13 @@ import torch
 from torch import nn
 
 from torchvi.core.constraint import Constraint
-from torchvi.core.vmodule import VModule
 from torchvi.vtensor import utils
 
 
-class Backing(VModule):
+class Backing(nn.Module):
     def __init__(self, size, name: str):
-        super().__init__(name=name)
+        super().__init__()
+        self.__name = name
         self.size = utils.to_size(size)
         self.mu = nn.Parameter(torch.Tensor(self.size), requires_grad=True)
         self.omega = nn.Parameter(torch.Tensor(self.size), requires_grad=True)
@@ -33,5 +33,9 @@ class Backing(VModule):
         omega = self.omega.detach().unsqueeze(0)
         return mu + eta * omega.exp()
 
+    @property
+    def name(self) -> str:
+        return self.__name
+
     def extra_repr(self) -> str:
-        return f'name={self.name}, size={self.size}'
+        return f'name={self.name} size={self.size}'

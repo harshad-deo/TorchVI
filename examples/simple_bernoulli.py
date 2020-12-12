@@ -48,10 +48,12 @@ def fit(xs, num_epochs, num_samples):
 
 
 if __name__ == "__main__":
+    import logging
     import matplotlib.pyplot as plt
     from utils.fix_seed import fix_seed
-
     fix_seed(42)
+    logging.basicConfig(format='%(asctime)s - [%(name)25s]:[%(lineno)4d]:[%(levelname)5s] - %(message)s',
+                        level=logging.INFO)
 
     num_samples = 100
     p_known = 0.65
@@ -69,8 +71,8 @@ if __name__ == "__main__":
     ax1.set_xlabel('Epoch')
 
     sample_success = torch.sum(xs)
-    alpha = 1 + sample_success
-    beta = 1 + num_samples - sample_success
+    alpha = sample_success
+    beta = num_samples - sample_success
     samples_expected = np.random.beta(a=alpha, b=beta, size=num_samples * 10)
 
     ax2.hist(samples_actual, label='actual', alpha=0.5, density=True)

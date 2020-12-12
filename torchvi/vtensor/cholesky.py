@@ -1,19 +1,22 @@
+from torch import nn
 import torch
 
+from torchvi.core.ast import SingleNodeIdentity
 from torchvi.core.vmodule import VModule
-from torchvi.vtensor.unconstrained import Unconstrained
-from torchvi.vtensor.lowerbound import LowerBound
+from torchvi.vtensor.backing import Backing
+from torchvi.vtensor.lowerbound import LowerBoundImpl
 
 
-class Cholesky(VModule):
+class CholeskyImpl(nn.Module):
     def __init__(self, size: int, name: str):
-        super().__init__(name=name)
+        super().__init__()
 
         if not isinstance(size, int):
             raise TypeError(f'size must be an integer. Got: {type(size)}')
         if size <= 1:
             raise ValueError(f'size must be greater than 1. Got: {size}')
 
+        self.name = name
         self.size = size
         self.tril_size = (size * (size - 1)) // 2
 
@@ -22,12 +25,12 @@ class Cholesky(VModule):
         self.register_buffer('diag_idx', diag_idx)
         self.register_buffer('tril_idx', tril_idx)
 
-        self.diag = LowerBound(size=self.size, lower_bound=0.0, name=f'{self.name}_diag')
-        self.tril = Unconstrained(size=self.tril_size, name=f'{self.name}_tril')
+        self.diag = LowerBoundImpl(size=size, lower_bound=0.0, name=f'{self.name}_diag')
+        self.tril = Backing(size=self.tril_size, name=f'{self.name}_tril')
 
-    def forward(self, x):
-        diag_zeta, diag_contrib = self.diag.forward(x)
-        tril_zeta, tril_contrib = self.tril.forward(x)
+    def forward(self):
+        diag_zeta, diag_contrib = self.diag()
+        tril_zeta, tril_contrib = self.tril()
 
         theta = torch.zeros(self.size, self.size, device=diag_zeta.device)
         theta[self.diag_idx, self.diag_idx] = diag_zeta
@@ -37,9 +40,9 @@ class Cholesky(VModule):
 
         return theta, constraint_contrib
 
-    def sample(self, x, size) -> torch.Tensor:
-        diag_samples = self.diag.sample(x, size)
-        tril_samples = self.tril.sample(x, size)
+    def sample(self, size) -> torch.Tensor:
+        diag_samples = self.diag.sample(size)
+        tril_samples = self.tril.sample(size)
 
         chol = torch.zeros([size, self.size, self.size], device=diag_samples.device)
         chol[:, self.diag_idx, self.diag_idx] = diag_samples
@@ -49,3 +52,13 @@ class Cholesky(VModule):
 
     def extra_repr(self) -> str:
         return f'name={self.name}, size={self.size}'
+
+
+class Cholesky(VModule):
+    def __init__(self, size: int, name: str):
+        super().__init__(name)
+        impl_name = f'{self.name}_impl'
+        self._module_dict[impl_name] = CholeskyImpl(size=size, name=impl_name)
+        terminal_node = SingleNodeIdentity(name=self.name, arg=impl_name)
+        self._terminal_node = terminal_node
+        self._graph_dict[self.name] = terminal_node

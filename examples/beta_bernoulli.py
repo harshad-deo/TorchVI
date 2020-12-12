@@ -48,10 +48,12 @@ def fit(alpha, beta, xs, num_epochs, num_samples):
 
 
 if __name__ == "__main__":
+    import logging
     import matplotlib.pyplot as plt
     from utils.fix_seed import fix_seed
-
     fix_seed(42)
+    logging.basicConfig(format='%(asctime)s - [%(name)25s]:[%(lineno)4d]:[%(levelname)5s] - %(message)s',
+                        level=logging.INFO)
 
     num_samples = 100
     p_known = 0.65
