@@ -5,14 +5,14 @@ from torchvi.core.ast import SingleNodeIdentity
 from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
 from torchvi.vtensor import utils
-from torchvi.vtensor.backing import Backing
+from torchvi.vtensor.unconstrained import UnconstrainedImpl
 
 
 class LowerUpperBoundImpl(nn.Module):
     def __init__(self, size, lower_bound, upper_bound, name: str):
         super().__init__()
         self.name = name
-        self.backing = Backing(size, f'{self.name}_backing')
+        self.backing = UnconstrainedImpl(size, f'{self.name}_backing')
         lower_bound = utils.to_numeric_tensor(lower_bound, 'lower_bound')
         upper_bound = utils.to_numeric_tensor(upper_bound, 'upper_bound')
         self.register_buffer('lower_bound', lower_bound)

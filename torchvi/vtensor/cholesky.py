@@ -3,8 +3,8 @@ import torch
 
 from torchvi.core.ast import SingleNodeIdentity
 from torchvi.core.vmodule import VModule
-from torchvi.vtensor.backing import Backing
 from torchvi.vtensor.lowerbound import LowerBoundImpl
+from torchvi.vtensor.unconstrained import UnconstrainedImpl
 
 
 class CholeskyImpl(nn.Module):
@@ -26,7 +26,7 @@ class CholeskyImpl(nn.Module):
         self.register_buffer('tril_idx', tril_idx)
 
         self.diag = LowerBoundImpl(size=size, lower_bound=0.0, name=f'{self.name}_diag')
-        self.tril = Backing(size=self.tril_size, name=f'{self.name}_tril')
+        self.tril = UnconstrainedImpl(size=self.tril_size, name=f'{self.name}_tril')
 
     def forward(self):
         diag_zeta, diag_contrib = self.diag()

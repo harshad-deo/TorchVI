@@ -1,13 +1,12 @@
 from functools import cached_property
 from typing import Set
-import torch
 from torch import distributions
 
 from torchvi.core.ast import ASTNode, ArgsDict, SamplesDict
 from torchvi.core.constant import wrap_if_constant
 from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
-from torchvi.vtensor.lowerbound import LowerBound, LowerBoundImpl
+from torchvi.vtensor.lowerbound import LowerBoundImpl
 
 
 class ExponentialNode(ASTNode):

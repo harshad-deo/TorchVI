@@ -1,14 +1,12 @@
 from functools import cached_property
 from typing import Set
-import torch
 from torch import distributions
 
 from torchvi.core.ast import ASTNode, ArgsDict, SamplesDict
 from torchvi.core.constant import wrap_if_constant
 from torchvi.core.vmodule import VModule
 from torchvi.core.constraint import Constraint
-from torchvi.vtensor.backing import Backing
-from torchvi.vtensor.unconstrained import Unconstrained
+from torchvi.vtensor.unconstrained import UnconstrainedImpl
 
 
 class NormalNode(ASTNode):
@@ -60,7 +58,7 @@ class Normal(VModule):
         loc_name = f'{self.name}_loc'
         scale_name = f'{self.name}_scale'
 
-        self._module_dict[node_name] = Backing(size=size, name=node_name)
+        self._module_dict[node_name] = UnconstrainedImpl(size=size, name=node_name)
         loc = wrap_if_constant(loc, name=loc_name)
         scale = wrap_if_constant(scale, name=scale_name)
 

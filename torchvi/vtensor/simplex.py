@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 from torchvi.core.constraint import Constraint
 from torchvi.core.vmodule import VModule
-from torchvi.vtensor.backing import Backing
+from torchvi.vtensor.unconstrained import UnconstrainedImpl
 
 
 class SimplexImpl(nn.Module):
@@ -20,7 +20,7 @@ class SimplexImpl(nn.Module):
 
         self.name = name
         self.size = size
-        self.backing = Backing(size - 1, f'{self.name}_backing')
+        self.backing = UnconstrainedImpl(size - 1, f'{self.name}_backing')
         ar = torch.arange(1, size, dtype=torch.float64, requires_grad=False)
         grad_scale = size - ar
         self.register_buffer('grad_scale', grad_scale)
