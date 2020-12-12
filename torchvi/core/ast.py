@@ -31,7 +31,7 @@ class ASTNode(ABC):
         return self.__name
 
 
-class Addition(ASTNode):
+class AdditionNode(ASTNode):
     def __init__(self, name: str, lhs: str, rhs: str):
         super().__init__(name)
         self.__lhs = lhs
@@ -61,8 +61,11 @@ class Addition(ASTNode):
         rhs = samples[self.rhs]
         samples[self.name] = lhs + rhs
 
+    def __repr__(self) -> str:
+        return f'Addition(name: {self.name}, lhs: {self.lhs}, rhs: {self.rhs})'
 
-class Subtraction(ASTNode):
+
+class SubtractionNode(ASTNode):
     def __init__(self, name: str, minuend: str, subtrahend: str):
         super().__init__(name)
         self.__minuend = minuend
@@ -92,8 +95,11 @@ class Subtraction(ASTNode):
         subtrahend = samples[self.subtrahend]
         samples[self.name] = minuend - subtrahend
 
+    def __repr__(self) -> str:
+        return f'Subtraction(name: {self.name}, minuend: {self.minuend}, subtrahend: {self.subtrahend})'
 
-class Multiplication(ASTNode):
+
+class MultiplicationNode(ASTNode):
     def __init__(self, name: str, lhs: str, rhs: str):
         super().__init__(name)
         self.__lhs = lhs
@@ -123,8 +129,11 @@ class Multiplication(ASTNode):
         rhs = samples[self.rhs]
         samples[self.name] = lhs * rhs
 
+    def __repr__(self) -> str:
+        return f'Multiplication(name: {self.name}, lhs: {self.lhs}, rhs: {self.rhs})'
 
-class Division(ASTNode):
+
+class DivisionNode(ASTNode):
     def __init__(self, name: str, dividend: str, divisor: str):
         super().__init__(name)
         self.__dividend = dividend
@@ -154,6 +163,9 @@ class Division(ASTNode):
         divisor = samples[self.divisor]
         samples[self.name] = dividend / divisor
 
+    def __repr__(self) -> str:
+        return f'Division(name: {self.name}, dividend: {self.dividend}, divisor: {self.divisor})'
+
 
 class SingleNodeAST(ASTNode):
     def __init__(self, name: str, arg: str):
@@ -180,10 +192,26 @@ class SingleNodeIdentity(SingleNodeAST):
         samples[self.name] = samples[self.arg]
 
     def __repr__(self) -> str:
-        return f'SingleNodeIdentity(name={self.name}, arg: {self.arg})'
+        return f'SingleNodeIdentity(name: {self.name}, arg: {self.arg})'
 
 
-class Exponent(SingleNodeAST):
+class AdditiveInverseNode(SingleNodeAST):
+    def __init__(self, name: str, arg: str):
+        super().__init__(name, arg)
+
+    def __call__(self, xs, args: ArgsDict):
+        arg, arg_constraint = args[self.arg]
+        args[self.name] = (-arg, arg_constraint)
+
+    def sample(self, xs, samples: SamplesDict):
+        arg = samples[self.arg]
+        samples[self.name] = -arg
+
+    def __repr__(self) -> str:
+        return f'AdditiveInverse(name: {self.name}, arg: {self.arg})'
+
+
+class ExponentNode(SingleNodeAST):
     def __init__(self, name: str, arg: str):
         super().__init__(name, arg)
 
@@ -194,3 +222,6 @@ class Exponent(SingleNodeAST):
     def sample(self, xs, samples: SamplesDict):
         arg = samples[self.arg]
         samples[self.name] = arg.exp()
+
+    def __repr__(self) -> str:
+        return f'Exponent(name: {self.name}, arg: {self.arg})'

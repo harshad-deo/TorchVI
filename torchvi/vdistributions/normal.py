@@ -3,9 +3,8 @@ from typing import Set
 from torch import distributions
 
 from torchvi.core.ast import ASTNode, ArgsDict, SamplesDict
-from torchvi.core.constant import wrap_if_constant
-from torchvi.core.vmodule import VModule
 from torchvi.core.constraint import Constraint
+from torchvi.core.vmodule import VModule, wrap_if_constant
 from torchvi.vtensor.unconstrained import UnconstrainedImpl
 
 
