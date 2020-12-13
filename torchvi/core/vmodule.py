@@ -147,9 +147,15 @@ class VModule(nn.Module, ABC):
         return res
 
     def exp(self):
-        exp_name = f'{self.name}_exp'
+        exp_name = f'exp_{self.name}'
         terminal_node = ExponentNode(name=exp_name, arg=self.name)
         res = Vop(modules=self._module_dict, graph=self._graph_dict, terminal_node=terminal_node, name=exp_name)
+        return res
+
+    def log(self):
+        log_name = f'log_{self.name}'
+        terminal_node = LogNode(name=log_name, arg=self.name)
+        res = Vop(modules=self._module_dict, graph=self._graph_dict, terminal_node=terminal_node, name=log_name)
         return res
 
     @property

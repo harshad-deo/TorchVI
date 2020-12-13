@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from functools import cached_property
+from random import sample
 from typing import Dict, Tuple, Set
 import torch
 
@@ -225,3 +226,19 @@ class ExponentNode(SingleNodeAST):
 
     def __repr__(self) -> str:
         return f'Exponent(name: {self.name}, arg: {self.arg})'
+
+
+class LogNode(SingleNodeAST):
+    def __init__(self, name: str, arg: str):
+        super().__init__(name, arg)
+
+    def __call__(self, xs, args: ArgsDict):
+        arg, arg_constraint = args[self.arg]
+        args[self.name] = (arg.log(), arg_constraint)
+
+    def sample(self, xs, samples: SamplesDict):
+        arg = samples[self.arg]
+        samples[self.name] = arg.log()
+
+    def __repr__(self) -> str:
+        return f'Log(name: {self.name}, arg: {self.arg})'

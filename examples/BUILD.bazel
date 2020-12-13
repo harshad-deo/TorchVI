@@ -39,6 +39,8 @@ simple_example(
     data = ["EfronMorrisBaseball.tsv"]
 )
 
+simple_example("gaussian_mixture")
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),
