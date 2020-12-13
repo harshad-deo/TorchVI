@@ -55,6 +55,6 @@ class HalfNormal(VModule):
         self._module_dict.update(scale._module_dict)
         self._graph_dict.update(scale._graph_dict)
 
-        terminal_node = HalfNormalNode(node_name=node_name, scale_name=scale_name, name=self.name)
+        terminal_node = HalfNormalNode(node_name=node_name, scale_name=scale.name, name=self.name)
         self._terminal_node = terminal_node
         self._graph_dict[self.name] = terminal_node

@@ -61,6 +61,6 @@ class Dirichlet(VModule):
         self._module_dict.update(alpha._module_dict)
         self._graph_dict.update(alpha._graph_dict)
 
-        terminal_node = DirichletNode(node_name=node_name, alpha_name=alpha_name, name=self.name)
+        terminal_node = DirichletNode(node_name=node_name, alpha_name=alpha.name, name=self.name)
         self._terminal_node = terminal_node
         self._graph_dict[self.name] = terminal_node

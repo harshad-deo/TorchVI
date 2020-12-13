@@ -69,6 +69,6 @@ class Beta(VModule):
         self._graph_dict.update(alpha._graph_dict)
         self._graph_dict.update(beta._graph_dict)
 
-        terminal_node = BetaNode(node_name=node_name, alpha_name=alpha_name, beta_name=beta_name, name=name)
+        terminal_node = BetaNode(node_name=node_name, alpha_name=alpha.name, beta_name=beta.name, name=name)
         self._terminal_node = terminal_node
         self._graph_dict[self.name] = terminal_node

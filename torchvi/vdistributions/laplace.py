@@ -67,6 +67,6 @@ class Laplace(VModule):
         self._graph_dict.update(loc._graph_dict)
         self._graph_dict.update(scale._graph_dict)
 
-        terminal_node = LaplaceNode(node_name=node_name, loc_name=loc_name, scale_name=scale_name, name=name)
+        terminal_node = LaplaceNode(node_name=node_name, loc_name=loc.name, scale_name=scale.name, name=name)
         self._terminal_node = terminal_node
         self._graph_dict[self.name] = terminal_node

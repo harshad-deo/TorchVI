@@ -56,6 +56,6 @@ class Exponential(VModule):
         self._module_dict.update(rate._module_dict)
         self._graph_dict.update(rate._graph_dict)
 
-        terminal_node = ExponentialNode(node_name=node_name, rate_name=rate_name, name=name)
+        terminal_node = ExponentialNode(node_name=node_name, rate_name=rate.name, name=name)
         self._terminal_node = terminal_node
         self._graph_dict[self.name] = terminal_node
