@@ -33,6 +33,12 @@ simple_example(
     with_pandas = True,
 )
 
+simple_example(
+    "hierarchical_partial_pooling",
+    with_pandas = True,
+    data = ["EfronMorrisBaseball.tsv"]
+)
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),
