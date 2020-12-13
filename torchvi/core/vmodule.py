@@ -82,7 +82,7 @@ class VModule(nn.Module, ABC):
 
     def __add__(self, that):
         rhs_name = f'{self.name}_add'
-        that = wrap_if_constant(that, rhs_name, True)
+        that = wrap_if_constant(that, rhs_name)
         add_name = f'add_{self.name}_{that.name}'
         terminal_node = AdditionNode(name=add_name, lhs=self.name, rhs=that.rhs)
         res_modules = {**self._module_dict, **that._module_dict}
@@ -95,7 +95,7 @@ class VModule(nn.Module, ABC):
 
     def __sub__(self, that):
         rhs_name = f'{self.name}_sub_rhs'
-        that = wrap_if_constant(that, rhs_name, True)
+        that = wrap_if_constant(that, rhs_name)
         sub_name = f'sub_{self.name}_{that.name}'
         terminal_node = SubtractionNode(name=sub_name, minuend=self.name, subtrahend=that.name)
         res_modules = {**self._module_dict, **that._module_dict}
@@ -105,7 +105,7 @@ class VModule(nn.Module, ABC):
 
     def __rsub__(self, that):
         lhs_name = f'{self.name}_sub_lhs'
-        that = wrap_if_constant(that, lhs_name, True)
+        that = wrap_if_constant(that, lhs_name)
         sub_name = f'sub_{that.name}_{self.name}'
         terminal_node = SubtractionNode(name=sub_name, minuend=that.name, subtrahend=self.name)
         res_modules = {**self._module_dict, **that._module_dict}
@@ -115,7 +115,7 @@ class VModule(nn.Module, ABC):
 
     def __mul__(self, that):
         rhs_name = f'{self.name}_mul'
-        that = wrap_if_constant(that, rhs_name, True)
+        that = wrap_if_constant(that, rhs_name)
         mul_name = f'mul_{self.name}_{that.name}'
         terminal_node = MultiplicationNode(name=mul_name, lhs=self.name, rhs=that.name)
         res_modules = {**self._module_dict, **that._module_dict}
@@ -128,7 +128,7 @@ class VModule(nn.Module, ABC):
 
     def __truediv__(self, that):
         rhs_name = f'{self.name}_div_rhs'
-        that = wrap_if_constant(that, rhs_name, True)
+        that = wrap_if_constant(that, rhs_name)
         div_name = f'div_{self.name}_{that.name}'
         terminal_node = DivisionNode(name=div_name, dividend=self.name, divisor=that.name)
         res_modules = {**self._module_dict, **that._module_dict}
@@ -138,7 +138,7 @@ class VModule(nn.Module, ABC):
 
     def __rtruediv__(self, that):
         lhs_name = f'{self.name}_div_lhs'
-        that = wrap_if_constant(that, lhs_name, True)
+        that = wrap_if_constant(that, lhs_name)
         div_name = f'div_{that.name}_{self.name}'
         terminal_node = DivisionNode(name=div_name, dividend=that.name, divisor=self.name)
         res_modules = {**self._module_dict, **that._module_dict}
@@ -202,7 +202,7 @@ class Vop(VModule):
         self._graph_dict[name] = terminal_node  # defensive check
 
 
-def wrap_if_constant(x, name: str, hash_name: bool = False):
+def wrap_if_constant(x, name: str):
     if isinstance(x, VModule):
         return x
     if isinstance(x, int) or isinstance(x, float):
@@ -213,9 +213,8 @@ def wrap_if_constant(x, name: str, hash_name: bool = False):
         tensor = x
     else:
         raise TypeError(f'Unsupported type for wrapping. Expected int, float or tensor, got: {type(x)}')
-    if hash_name:
-        tensor_bytes = tensor.cpu().numpy().tobytes()
-        m = hashlib.md5(name.encode('utf-8'))
-        m.update(tensor_bytes)
-        name = f'{name}_{m.hexdigest()}'
+    tensor_bytes = tensor.cpu().numpy().tobytes()
+    m = hashlib.md5(name.encode('utf-8'))
+    m.update(tensor_bytes)
+    name = f'{name}_{m.hexdigest()}'
     return Constant(value=tensor, name=name)
