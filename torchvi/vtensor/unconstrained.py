@@ -29,7 +29,7 @@ class UnconstrainedImpl(nn.Module):
     def sample(self, size) -> torch.Tensor:
         device = self.mu.device
 
-        sample_size = [size] + list(self.size)
+        sample_size = list(utils.to_size(size)) + list(self.size)
         eta = torch.randn(sample_size, device=device)
         mu = self.mu.detach().unsqueeze(0)
         omega = self.omega.detach().unsqueeze(0)
