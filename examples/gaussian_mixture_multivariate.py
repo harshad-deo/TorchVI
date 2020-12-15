@@ -73,11 +73,27 @@ if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s - [%(name)25s]:[%(lineno)4d]:[%(levelname)5s] - %(message)s',
                         level=logging.INFO)
 
-    locs = torch.tensor([[2.0, 4.0], [-2.0, 2.0]])
-    scale_tril = torch.cat([
-        torch.eye(2).unsqueeze(0) * 0.3,
-        torch.eye(2).unsqueeze(0) * 0.7,
-    ])
+    mu_x0 = 2.0
+    mu_y0 = 4.0
+    mu_x1 = -2.0
+    mu_y1 = 2.0
+
+    sd_x0 = 0.4
+    sd_y0 = 0.5
+    sd_x1 = 0.7
+    sd_y1 = 0.5
+
+    rho_0 = torch.tensor([[1.0, 0.0], [0.3, 1.0]])
+    rho_1 = torch.tensor([[1.0, 0.0], [-0.5, 1.0]])
+
+    rho_0_chol = torch.cholesky(rho_0, upper=False)
+    rho_1_chol = torch.cholesky(rho_1, upper=False)
+
+    sd_0 = torch.matmul(torch.diag(torch.tensor([sd_x0, sd_y0])), rho_0_chol)
+    sd_1 = torch.matmul(torch.diag(torch.tensor([sd_x1, sd_y1])), rho_1_chol)
+
+    locs = torch.tensor([[mu_x0, mu_y0], [mu_x1, mu_y1]])
+    scale_tril = torch.cat([sd_0.unsqueeze(0), sd_1.unsqueeze(0)])
 
     dist = distributions.MultivariateNormal(loc=locs, scale_tril=scale_tril)
     num_samples = 100
