@@ -6,6 +6,7 @@ py_library(
     srcs = [
         "__init__.py",
         "cholesky.py",
+        "choleskylkj.py",
         "covariance.py",
         "lowerbound.py",
         "lowerupperbound.py",

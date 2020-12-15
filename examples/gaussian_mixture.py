@@ -43,11 +43,6 @@ def fit(n_components, loc_mean_prior, loc_scale_prior, scale_prior, xs, num_epoc
                   loc_mean_prior=loc_mean_prior,
                   loc_scale_prior=loc_scale_prior,
                   scale_prior=scale_prior)
-
-    model = Model(n_components=n_components,
-                  loc_mean_prior=loc_mean_prior,
-                  loc_scale_prior=loc_scale_prior,
-                  scale_prior=scale_prior)
     model = model.to(device)
     xs = xs.to(device)
 

@@ -41,6 +41,8 @@ simple_example(
 
 simple_example("gaussian_mixture")
 
+simple_example('gaussian_mixture_multivariate')
+
 format_py(
     name = "fmt",
     srcs = glob(["*.py"]),
