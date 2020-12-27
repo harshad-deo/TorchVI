@@ -65,7 +65,7 @@ class VModule(nn.Module, ABC):
 
     def sample(self, xs, size) -> torch.Tensor:
         node_seq = self.__node_seq
-        samples_dict = {k: v.sample(size) for k, v in self._module_dict.items()}
+        samples_dict = {}
         for node_name in node_seq:
             if node_name in self._module_dict:
                 samples_dict[node_name] = self._module_dict[node_name].sample(size)
