@@ -56,8 +56,8 @@ approximate the true posterior. There are two families of approaches that are us
 
 This monograph presents Automatic Differentiation Variational Inference (ADVI), a new VI algorithm
 developed by Kucukelbir at al \footnote{Kucukelbir, Alp, et al. ``Automatic differentiation variational inference." 
-The Journal of Machine Learning Research 18.1 (2017): 430-474.} that overcomes the shortcomings of earlier VI approaches,
-with a focus on using ADVI to fit complex models to large datasets. 
+The Journal of Machine Learning Research 18.1 (2017): 430-474.} that overcomes the shortcomings of earlier VI approaches.
+Subsequent monographs will develop simplifying assumptions that allow complex models to be calibrated to large datasets. 
 
 \section*{Applicability}
 
@@ -153,16 +153,17 @@ two main ways:
 \end{enumerate}
 
 The number of parameters of a Full-rank Gaussian approximation ($\phi$) grow quadratically with the dimensionality of the 
-latent space ($K$), making this approach unfeasable for large models. Since the focus of this monograph (and the repository),
-is on techniques to fit large models to large datasets, only the mean field approximation is considered. Therefore the
-variational approximation is given by:
+latent space ($K$), making this approach unfeasable for large models. Since the focus of this repository is on techniques
+to fit complex models to large datasets, subsequent monographs will focus on the mean field approximation. For the sake of 
+generality, this monograph presents the full rank approach. Therefore the variational approximation is given by:
 
 \begin{align*}
-  q(\zeta, \phi) \defeq& \prod_{k = 1}^{K}\mathcal{N}\big(\zeta_k; \mu_k, (\exp \omega_k)^2\big) \\
-  \Phi =& \{\mu_1, \ldots, \mu_K, \omega_1, \ldots, \omega_K \} = \mathbb{R}^{2K}
+  q(\zeta, \phi) \defeq& \mathcal{N}\big(\zeta; \mu, \Sigma ^ 2\big) \\
+  \Phi =& \{\mu_1, \ldots, \mu_K, l_{\{1, 1\}}, \ldots, l_{\{K, K\}} \} = \mathbb{R}^{K ( K + 1) / 2}
 \end{align*}
 
-With this approximation, the optimization objective can be expressed as:
+Where $l_{\{i, j\}}$ is a Cholesky factor of the covariance matrix. With this approximation, the optimization objective 
+can be expressed as:
 
 \begin{equation*}
   \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] - \mathbb{E}_{q(\zeta; \phi)}\big[\log q(\zeta; \phi) \big]
@@ -170,26 +171,24 @@ With this approximation, the optimization objective can be expressed as:
 
 The second term is the entropy of a multivariate Gaussian. This can be simplified to:
 
-\begin{align*}
-  \mathbb{E}_q[\log q] &= \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \frac{1}{2}\ln\det\big(\text{diag}((\exp \omega)^2\big) \\
-  &= \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \frac{1}{2}\ln\prod_{k=1}^K\big(\exp \omega_{k}\big)^2 \\
-  &= \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \sum_{k=1}^{K}\omega_k
-\end{align*}
+\begin{equation*}
+  \mathbb{E}_q[\log q] = \frac{K}{2} + \frac{K}{2}\ln(2\pi) + \frac{1}{2}\ln\det \Sigma^2
+\end{equation*}
 
 Therefore the optimization objective can be simplified to:
 
 \begin{equation*}
-  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] + \sum_{k=1}^{K}\omega_k
+  \phi^* = \underset{\phi \in \Phi}{\text{argmax}} \, \mathbb{E}_{q(\zeta; \phi)}\big[\log p(x, T^{-1}(\zeta)) + \log |\det J_{T^{-1}}(\zeta)|\big] + \frac{1}{2}\ln \det \Sigma ^ 2
 \end{equation*}
 
 
 The final step is to convert the expectation over $q(\zeta; \phi)$ into one over a standard normal variable. To achieve
 this, consider a transformation $S_{\phi}$ that aborbs the variational parameters $\phi$\footnote{This is variously 
 referred to as elliptical standardization, coordinate transformation, invertable transformation and the re-parameterization
-trick}. In the mean field case, this is given by:
+trick}. In general, this is given by:
 
 \begin{align*}
-  \eta &= S_{\phi}(\zeta) = \text{diag}\big(\exp(\omega)\big)^{-1}(\zeta - \mu) \\
+  \eta &= S_{\phi}(\zeta) = L^{-1} (\zeta - \mu), \quad \text{where $L$ is a cholesky decomposition of $\Sigma$} \\
   q(\eta) &= \prod_{k=1}^{K}\mathcal{N}(\eta_k; 0, 1)
 \end{align*}
 
@@ -197,7 +196,7 @@ trick}. In the mean field case, this is given by:
 With this transformation, the objective function is given by:
 
 \begin{equation*}
-  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] + \sum_{k=1}^{K}\omega_k
+  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] + \frac{1}{2}\ln \det \Sigma ^ 2
 \end{equation*}
 
 Since the expectation in the objective is no longer dependent on the optimization target ($\phi$), the gradient of the expectation

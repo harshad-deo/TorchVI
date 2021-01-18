@@ -5,8 +5,8 @@ load("//rules:http_archive_ext.bzl", "http_archive_ext")
 
 http_archive(
     name = "rules_python",
-    sha256 = "e46612e9bb0dae8745de6a0643be69e8665a03f63163ac6610c210e80d14c3e4",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.0.3/rules_python-0.0.3.tar.gz",
+    sha256 = "b6d46438523a3ec0f3cead544190ee13223a52f6a6765a29eae7b7cc24cc83a0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz",
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories")
@@ -43,12 +43,15 @@ gazelle_dependencies()
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "b929c2394c354a469167a96a25b102f9793a7ae9f7ce4ee6f5a7e5055c2dd14b",
-    strip_prefix = "protobuf-master",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/master.zip"],
+    sha256 = "71030a04aedf9f612d2991c1c552317038c3c5a2b578ac4745267a45e7037c29",
+    strip_prefix = "protobuf-3.12.3",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.12.3.tar.gz"],
 )
 
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+load(
+    "@com_google_protobuf//:protobuf_deps.bzl",
+    "protobuf_deps",
+)
 
 protobuf_deps()
 
@@ -83,22 +86,13 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 http_archive_ext(
-    name = "python38_static",
+    name = "python39_static",
     build_file_content = """
 exports_files(["python_bin"])
 filegroup(
     name = "files",
     srcs = glob(["build/**"], exclude = ["**/* *"]),
     visibility = ["//visibility:public"],
-)
-
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
-pkg_tar(
-    name = "python38",
-    extension = "tar.gz",
-    srcs = glob(["build/**"], exclude=['WORKSPACE', 'BUILD.bazel']),
-    strip_prefix = "build",
-    visibility = ["//visibility:public"]
 )
 """,
     patch_cmds = [
@@ -108,41 +102,20 @@ pkg_tar(
         "make install",
         "ln -s build/bin/python3 python_bin",
     ],
-    sha256 = "e3003ed57db17e617acb382b0cade29a248c6026b1bd8aad1f976e9af66a83b0",
-    strip_prefix = "Python-3.8.5",
+    sha256 = "29cb91ba038346da0bd9ab84a0a55a845d872c341a4da6879f462e94c741f117",
+    strip_prefix = "Python-3.9.1",
     urls = [
-        "https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz",
+        "https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz",
     ],
-    workspace_file_content = """
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "rules_pkg",
-    urls = [
-        "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.6-1/rules_pkg-0.2.6.tar.gz",
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.2.6/rules_pkg-0.2.6.tar.gz",
-    ],
-    sha256 = "aeca78988341a2ee1ba097641056d168320ecc51372ef7ff8e64b139516a4937",
-)
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-rules_pkg_dependencies()
-""",
 )
 
-load("@rules_python//python:pip.bzl", "pip_repositories")
+load("@rules_python//python:pip.bzl", "pip_install")
 
-pip_repositories()
-
-load("@rules_python//python:pip.bzl", "pip_import")
-
-pip_import(
+pip_install(
     name = "py_deps",
-    python_interpreter_target = "@python38_static//:python_bin",
+    python_interpreter_target = "@python39_static//:python_bin",
     requirements = "//:requirements.txt",
 )
-
-load("@py_deps//:requirements.bzl", "pip_install")
-
-pip_install()
 
 http_file(
     name = "poisson_sim",

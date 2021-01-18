@@ -7,8 +7,8 @@ buildifier(
 
 py_runtime(
     name = "python3_runtime",
-    files = ["@python38_static//:files"],
-    interpreter = "@python38_static//:python_bin",
+    files = ["@python39_static//:files"],
+    interpreter = "@python39_static//:python_bin",
     python_version = "PY3",
     visibility = ["//visibility:public"],
 )

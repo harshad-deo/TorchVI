@@ -35,13 +35,13 @@ simple_example(
 
 simple_example(
     "hierarchical_partial_pooling",
+    data = ["EfronMorrisBaseball.tsv"],
     with_pandas = True,
-    data = ["EfronMorrisBaseball.tsv"]
 )
 
 simple_example("gaussian_mixture")
 
-simple_example('gaussian_mixture_multivariate')
+simple_example("gaussian_mixture_multivariate")
 
 format_py(
     name = "fmt",
