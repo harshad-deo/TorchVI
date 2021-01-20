@@ -71,6 +71,21 @@ variables.
 
 \section*{Simplifying Entropy}
 
+The contribution of the entropy of the variational approximation to the ELBO can be simplified as:
+
+\begin{align*}
+  \frac{1}{2}\ln| \det \Sigma ^ 2| &= \frac{1}{2}\ln |\det \big(\text{diag}(\exp(\omega) ^ 2)\big)|  \\
+  &= \frac{1}{2}\ln \prod_{k=1}^{K}\big(\exp(\omega_k)^2\big) \\
+  &= \ln \prod_{k=1}^{K}\exp \omega_k \\
+  &= \sum_{k=1}^{K}\omega_k
+\end{align*}
+
+Therefore the optimization objective can be simplified to:
+
+\begin{equation*}
+  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] + \sum_{k=1}^{K}\omega_k
+\end{equation*}
+
 
 \section*{Graph Simplification}
 
