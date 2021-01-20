@@ -15,3 +15,19 @@ latex_document(
     ],
     main = "introduction.tex",
 )
+
+latex_document(
+    name = "meanfieldsimpl",
+    srcs = [
+        "//dep:mathtools",
+        "//dep:setspace",
+        "@bazel_latex//packages:amsmath",
+        "@bazel_latex//packages:amssymb",
+        "@bazel_latex//packages:calc",
+        "@bazel_latex//packages:datetime2",
+        "@bazel_latex//packages:eufrak",
+        "@bazel_latex//packages:geometry",
+        "@bazel_latex//packages:hyperref",
+    ],
+    main = "meanfieldsimpl.tex",
+)
