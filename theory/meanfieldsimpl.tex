@@ -107,6 +107,19 @@ To simplify the expression further, the family of constraint relaxation function
 for whom the Jacobian of the inverse transform is a triangular matrix. This is a benign assumption in practice because it is
 true for virtually all of the commonly used transformations. Since the Jacobian of a triangular matrix is the product of 
 its diagonal, this assumption allows the computational graph to be factorized into mutually exclusive subgraphs $U_1 \ldots U_M, M \leq K$
-such that $U_m, 1 \le m \leq M$ is only dependent on $U_1 \ldots U_{m - 1}$. 
+such that $U_m, 1 \le m \leq M$ is only dependent on $U_1 \ldots U_{m - 1}$. Let
+
+\begin{align*}
+  z_m \defeq&\quad \text{The output of the m-th subgraph} \\
+  \rho_m \defeq&\quad \text{The log prior probability of the m-th subgraph} \\
+  \tau_m \defeq&\quad \text{The contribution of the jacobian of the inverse constraint transform} \\
+  K_m \defeq&\quad \text{Indices for the m-th subgraph}
+\end{align*}
+
+The optimization objective can therefore be reexpressed as:
+
+\begin{equation*}
+  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x | z_M) \big] + \sum_{m=1}^{M}\Big(\mathbb{E}_{\mathcal{N}(\eta_m; 0, 1)(\rho_m(z_1, \ldots, z_m ))}\Big)
+\end{equation*}
 
 \end{document}
