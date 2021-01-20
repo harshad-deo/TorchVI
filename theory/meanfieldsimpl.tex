@@ -69,7 +69,7 @@ The correlation, if required, now needs to be modelled in explicitly as a functi
 the Lewandowski-Kurowicka-Joe transform \footnote{Lewandowski, D., Kurowicka, D., \& Joe, H. (2009). Generating random correlation matrices based on vines and extended onion method. Journal of multivariate analysis, 100(9), 1989-2001.} can be used to explicitly model a correlation matrix for a subset of the latent
 variables. 
 
-\section*{Simplifying Entropy}
+\section*{Entropy Simplification}
 
 The contribution of the entropy of the variational approximation to the ELBO can be simplified as:
 
@@ -86,7 +86,27 @@ Therefore the optimization objective can be simplified to:
   \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x, T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] + \sum_{k=1}^{K}\omega_k
 \end{equation*}
 
+\section*{Joint Probability Simplification}
+
+The joint probability of the data and the parameters, $p\big(x, T^{-1}(S_\phi^{-1}(\eta))\big)$ can be factorized as the product 
+of the probability of the data, given the parameters and the prior probability of the parameters. The objective can thus be 
+reexpressed as:
+
+\begin{equation*}
+  \phi^* = \underset{\phi}{\text{argmax}} \, \mathbb{E}_{\mathcal{N}(\eta; 0, 1)}\big[\log p(x | T^{-1}(S_\phi^{-1}(\eta))) + \log p(T^{-1}(S_\phi^{-1}(\eta))) + \log |\det J_{T^{-1}}(S_\phi^{-1}(\eta))|\big] + \sum_{k=1}^{K}\omega_k
+\end{equation*}
+
+
+Therefore, it is observed that the prior probability acts as a regularizing term on the distribution of the latent space. This gives 
+a clear and simple interpretation to standard regularization techniques like $L_1$ and $L_2$ regularization as assigning Laplace
+and Gaussian priors respectively. 
 
 \section*{Graph Simplification}
+
+To simplify the expression further, the family of constraint relaxation functions, $T(\theta)$ has to be restricted to those
+for whom the Jacobian of the inverse transform is a triangular matrix. This is a benign assumption in practice because it is
+true for virtually all of the commonly used transformations. Since the Jacobian of a triangular matrix is the product of 
+its diagonal, this assumption allows the computational graph to be factorized into mutually exclusive subgraphs $U_1 \ldots U_M, M \leq K$
+such that $U_m, 1 \le m \leq M$ is only dependent on $U_1 \ldots U_{m - 1}$. 
 
 \end{document}
