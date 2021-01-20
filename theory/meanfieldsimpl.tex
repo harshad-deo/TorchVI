@@ -29,12 +29,48 @@
   
 \setlength{\parskip}{\baselineskip}%
   
-  
 \begin{document}
   
 \maketitle
 
+This monograph is a follow up to the article introducing Auto Differentiation Variational Inference and develops simplifying
+assumptions that allow the technique to be used to train large, complex models over large datasets, for example Bayesian 
+Deep Learning.
+
+\section*{Decoupling The Latent Space}
+
+The full rank approximation, developed in the previous monograph, allows all the latent variables ($\theta$) to be coupled
+with each other through the correlation matrix of the variational approximation. As a result, the number of parameters
+required to model the latent space grows quadratically with the size of the latent space. This makes it intractable for 
+use in all but the simplest problems, with a few thousand latent variables. 
+
+The mean field approximation assumes that all the latent variables are independent. Therefore, the number of parameters
+required to model the latent space grows linearly with the size of the latent space, making it practical to scale the size
+of the model. Formally,
+
+\begin{align*}
+  q(\zeta, \phi) \defeq& \mathcal{N}\big(\zeta; \mu, \text{diag}(\exp(\omega) ^2)\big) \\
+  =& \prod_{k=1}^K \mathcal{N}(\zeta_k; \mu_k, \exp(\omega_k)^2)
+\end{align*}
+
+With this parameterization, the space of the variational parameters is given by:
+
+\begin{equation*}
+  \Phi = \{\mu_1, \ldots, \mu_k, \omega_1, \ldots, \omega_k\} = \mathbb{R}^{2K}
+\end{equation*}
+
+And the elliptical standardization is given by:
+
+\begin{equation*}
+  \eta_k = S_{\phi}(\zeta) = \frac{\zeta_k - \mu_k}{\exp \omega_k}
+\end{equation*}
+
+The correlation, if required, now needs to be modelled in explicitly as a function of the latent variables. For example, 
+the Lewandowski-Kurowicka-Joe transform \footnote{Lewandowski, D., Kurowicka, D., \& Joe, H. (2009). Generating random correlation matrices based on vines and extended onion method. Journal of multivariate analysis, 100(9), 1989-2001.} can be used to explicitly model a correlation matrix for a subset of the latent
+variables. 
+
 \section*{Simplifying Entropy}
+
 
 \section*{Graph Simplification}
 
